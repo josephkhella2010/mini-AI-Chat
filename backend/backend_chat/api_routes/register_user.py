@@ -34,8 +34,8 @@ def register_user(req):
             firstname=data["firstname"],
             lastname=data["lastname"],
             dateOfBirth=data["dateOfBirth"],
-            items=[],
         )
+        created_user.items.set([])  
         created_user.save()
 
         user={
