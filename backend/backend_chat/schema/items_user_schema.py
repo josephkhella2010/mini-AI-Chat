@@ -1,10 +1,10 @@
 from django.db import models
-from .user_info_schema import UserInfo
+from .user_info_schema import User
 
 
 class Item(models.Model):
     user = models.ForeignKey(
-        UserInfo,
+        User,
         related_name="items",
         on_delete=models.CASCADE
     )
