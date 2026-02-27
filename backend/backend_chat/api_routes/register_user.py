@@ -16,7 +16,7 @@ def register_user(req):
         required_fields=["username","email","password", "repassword" ,"firstname","lastname","dateOfBirth"]
         for field in required_fields:
             if  not data[field]:
-                return JsonResponse({"msg":f"{field}is required"},status=400)
+                return JsonResponse({"msg":f"please fill all fields  required"},status=400)
         
         if data["password"] != data["repassword"]:
                         return JsonResponse({"error":"password is not matches"},status=400)
