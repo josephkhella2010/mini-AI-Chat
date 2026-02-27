@@ -6,8 +6,8 @@ import NavigationContainer from "../navigation/navigationContainer";
 export default function RoutesPage() {
   return (
     <div>
-      <NavigationContainer />
       <Router>
+        <NavigationContainer />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/register" element={<RegisterPage />} />
