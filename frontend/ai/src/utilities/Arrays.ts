@@ -16,3 +16,5 @@ export const registerForm: registerFormType[] = [
   }
   return { ...it, placeHolder: `Please enter your ${it.label}` };
 });
+export const tokenStorage = sessionStorage.getItem("token");
+export const userStorage = localStorage.getItem("user");

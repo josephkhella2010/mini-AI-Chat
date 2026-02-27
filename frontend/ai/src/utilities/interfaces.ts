@@ -39,3 +39,7 @@ export interface RegisterPayload {
   lastname: string;
   dateOfBirth: string;
 }
+export interface loginPayload {
+  username: string;
+  password: string;
+}

@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { setAddUser } from "../reduxSlice/MainUserSlice";
+import { setLogInUser } from "../reduxSlice/MainUserSlice";
 import { fetchApi } from "../../utilities/apiHeader";
 import {
   setClearLoading,
@@ -7,41 +7,39 @@ import {
   setLoading,
 } from "../reduxSlice/LoadingAndErrorSlice";
 import type { SagaIterator } from "redux-saga";
-import type { RegisterPayload, UserType } from "../../utilities/interfaces";
+import type { loginPayload, UserType } from "../../utilities/interfaces";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-interface RegisterResponse {
+interface LoginResponse {
   msg: string;
   user: UserType;
-  token?: string;
+  token: string;
 }
 
-function* fetchAddUserSaga(
-  action: PayloadAction<RegisterPayload>,
+function* fetchLoginUserSaga(
+  action: PayloadAction<loginPayload>,
 ): SagaIterator {
   const fetchApiUrl = () =>
-    fetchApi<RegisterResponse>("register-user", "POST", action.payload, false);
-  console.log("SAGA RUNNING 🔥", action.payload);
+    fetchApi("login-user", "POST", action.payload, false);
   try {
     yield put(setLoading());
-    const response: RegisterResponse = yield call(fetchApiUrl);
-    yield put(setAddUser(response.user));
+    const response: LoginResponse = yield call(fetchApiUrl);
+    const { user, token, msg } = response;
+    yield put(setLogInUser({ user, token }));
+    toast.success(msg);
     yield put(setClearLoading());
-    toast.success(response.msg);
   } catch (error: any) {
-
     const msg =
       error?.response?.data?.msg ||
       error?.response?.data?.error ||
       JSON.stringify(error?.response?.data) ||
       error?.message ||
       "Something went wrong";
-
     yield put(setError(msg));
     toast.error(msg);
   }
 }
 
-export function* watchFetchAddUser() {
-  yield takeLatest("FETCH_ADD_USER", fetchAddUserSaga);
+export function* watchFetchLoginUser() {
+  yield takeLatest("FETCH_LOGIN_USER", fetchLoginUserSaga);
 }
