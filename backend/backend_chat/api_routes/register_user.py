@@ -10,20 +10,20 @@ from django.db.models import Q
 @csrf_exempt
 def register_user(req):
     if req.method != "POST":
-        return JsonResponse({"error":"Method not Allowed"},status=405)
+        return JsonResponse({"msg":"Method not Allowed"},status=405)
     try:
         data = json.loads(req.body)
         required_fields=["username","email","password", "repassword" ,"firstname","lastname","dateOfBirth"]
         for field in required_fields:
             if  not data[field]:
-                return JsonResponse({"error":f"{field}is required"},status=400)
+                return JsonResponse({"msg":f"{field}is required"},status=400)
         
         if data["password"] != data["repassword"]:
                         return JsonResponse({"error":"password is not matches"},status=400)
         exist_user = User.objects.filter(Q(username=data["username"]) | Q(email=data["email"])).first()
 
         if exist_user:
-            return JsonResponse({"error":"Username or Email already exists"},status=400)
+            return JsonResponse({"msg":"Username or Email already exists"},status=400)
         
         hashed_password = make_password(data["password"])
 

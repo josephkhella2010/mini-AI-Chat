@@ -18,13 +18,13 @@ def login_user(req):
         required_fields=["username","password"]
         for field in required_fields:
             if not data[field]:
-                return JsonResponse({"error":f"{field} is required"},status=400)
+                return JsonResponse({"msg":f"{field} is required"},status=400)
             Exist_user=User.objects.filter(( Q(username=data["username"]) | Q(email=data["username"]))).first()
             if not Exist_user:
-                return JsonResponse({"error":"user is not Exist"},status=400)
+                return JsonResponse({"msg":"user is not Exist"},status=400)
             
             if not check_password(data["password"],Exist_user.password):
-                return JsonResponse({"error":"password is not correct"},status=400)
+                return JsonResponse({"msg":"password is not correct"},status=400)
             #create token
             token = create_jwt(Exist_user)
             user={

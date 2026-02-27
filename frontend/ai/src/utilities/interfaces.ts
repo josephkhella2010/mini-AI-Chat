@@ -13,3 +13,29 @@ export interface UserType {
   dateOfBirth: string;
   items: ItemType[];
 }
+
+export interface registerFormType {
+  label: string;
+  type: string;
+  name: string;
+  placeHolder?: string;
+}
+export interface RegisterInputValType {
+  username: string;
+  email: string;
+  password: string;
+  repassword: string;
+  firstname: string;
+  lastname: string;
+  dateOfBirth: string;
+}
+
+export interface RegisterPayload {
+  username: string;
+  email: string;
+  password: string;
+  repassword: string;
+  firstname: string;
+  lastname: string;
+  dateOfBirth: string;
+}
