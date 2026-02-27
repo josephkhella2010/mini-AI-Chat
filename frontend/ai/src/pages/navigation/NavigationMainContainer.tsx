@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-export default function NavigationContainer() {
+export default function NavigationMainContainer() {
   const navigate = useNavigate();
   return (
     <div>

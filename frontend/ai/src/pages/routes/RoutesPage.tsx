@@ -4,7 +4,7 @@ import RegisterPage from "../register/RegisterPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LoginMainPage from "../login/LoginMainPage";
-import NavigationContainer from "../navigation/NavigationContainer";
+import NavigationContainer from "../navigation/NavigationMainContainer";
 export default function RoutesPage() {
   return (
     <div>
