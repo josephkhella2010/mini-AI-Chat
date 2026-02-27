@@ -34,6 +34,7 @@ if render_host:
 # 👇 ADD THIS BELOW
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+     "https://mini-ai-chat-x36r.onrender.com",
 ]
 
 # Application definition
