@@ -20,7 +20,7 @@ function* fetchLoginUserSaga(
   action: PayloadAction<loginPayload>,
 ): SagaIterator {
   const fetchApiUrl = () =>
-    fetchApi("login-user", "POST", action.payload, false);
+    fetchApi<LoginResponse>("login-user", "POST", action.payload, false);
   try {
     yield put(setLoading());
     const response: LoginResponse = yield call(fetchApiUrl);
