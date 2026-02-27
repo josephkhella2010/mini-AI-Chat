@@ -4,7 +4,7 @@ import HomePageFirstContainer from "./childComponent/HomePageFirstContainer";
 import { useEffect } from "react";
 
 export default function HomePage() {
-  const { users, user } = useSelector(
+  const { users, singleUser } = useSelector(
     (state: RootState) => state.mainUserInfoData,
   );
   const dispatch = useDispatch();
@@ -13,7 +13,7 @@ export default function HomePage() {
     dispatch({ type: "FETCH_USERS" });
   }, []);
   console.log("users", users);
-  console.log("user", user);
+  console.log("user", singleUser);
 
   return (
     <div>

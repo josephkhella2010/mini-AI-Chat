@@ -6,15 +6,15 @@ const tokenStoraged = tokenStorage ? tokenStorage : null;
 
 interface initialStateType {
   users: UserType[];
-  user: {
-    singleUser: UserType | null;
+  singleUser: {
+    user: UserType | null;
     token: string | null;
   };
 }
 const initialState: initialStateType = {
   users: [],
-  user: {
-    singleUser: userStoraged,
+  singleUser: {
+    user: userStoraged,
     token: tokenStoraged,
   },
 };
@@ -32,8 +32,8 @@ const MainUserSlice = createSlice({
       state,
       action: PayloadAction<{ user: UserType; token: string }>,
     ) => {
-      state.user.singleUser = action.payload.user;
-      state.user.token = action.payload.token;
+      state.singleUser.user = action.payload.user;
+      state.singleUser.token = action.payload.token;
       localStorage.setItem("user", JSON.stringify(action.payload.user));
       sessionStorage.setItem("token", action.payload.token);
     },
