@@ -43,8 +43,22 @@ const MainUserSlice = createSlice({
       localStorage.removeItem("user");
       sessionStorage.removeItem("token");
     },
+    setDeleteUser: (state, action: PayloadAction<number>) => {
+      const filteredUser = state.users.filter(
+        (u) => Number(u.id) !== Number(action.payload),
+      );
+      state.users = filteredUser;
+      if (state.singleUser?.user?.id === action.payload) {
+        setLogoutUser();
+      }
+    },
   },
 });
-export const { setUsers, setAddUser, setLogInUser, setLogoutUser } =
-  MainUserSlice.actions;
+export const {
+  setUsers,
+  setAddUser,
+  setLogInUser,
+  setLogoutUser,
+  setDeleteUser,
+} = MainUserSlice.actions;
 export default MainUserSlice.reducer;
