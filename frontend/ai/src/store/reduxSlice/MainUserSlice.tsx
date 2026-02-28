@@ -49,7 +49,10 @@ const MainUserSlice = createSlice({
       );
       state.users = filteredUser;
       if (state.singleUser?.user?.id === action.payload) {
-        setLogoutUser();
+        state.singleUser.user = null;
+        state.singleUser.token = null;
+        localStorage.removeItem("user");
+        sessionStorage.removeItem("token");
       }
     },
   },
