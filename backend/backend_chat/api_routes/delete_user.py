@@ -25,19 +25,19 @@ def delete_user(req,user_id):
          # 🔒 Only allow self-delete
         if token_user.id != int(user_id):
             return JsonResponse({"error": "Permission denied"}, status=403)
-        token_user.delete()
-
-        update_user={
-                        "id":token_user.id,
-                        "username":token_user.username,
-                        "email":token_user.email,
-                        "firstname":token_user.firstname,
-                        "lastname":token_user.lastname,
-                        "dateOfBirth":token_user.dateOfBirth,
+        # 🔥 Force evaluation BEFORE delete
+        items_list = list(token_user.items.all())
+        update_user={"id": token_user.id,
+                      "username": token_user.username,
+                       "email": token_user.email,
+                       "firstname": token_user.firstname,
+                       "lastname": token_user.lastname,
+                       "dateOfBirth": token_user.dateOfBirth,
                         "password":token_user.password,
-                         "items": [
+                        "items": [
                             {"id": it.id, "name": it.name}
-                            for it in token_user.items.all()]},
+                            for it in items_list]}
+        token_user.delete()
 
         return JsonResponse({"msg":"User Successfully Deleted","user":update_user},status=200)
     except Exception as e:
