@@ -37,7 +37,14 @@ const MainUserSlice = createSlice({
       localStorage.setItem("user", JSON.stringify(action.payload.user));
       sessionStorage.setItem("token", action.payload.token);
     },
+    setLogoutUser: (state) => {
+      state.singleUser.user = null;
+      state.singleUser.token = null;
+      localStorage.removeItem("user");
+      sessionStorage.removeItem("token");
+    },
   },
 });
-export const { setUsers, setAddUser, setLogInUser } = MainUserSlice.actions;
+export const { setUsers, setAddUser, setLogInUser, setLogoutUser } =
+  MainUserSlice.actions;
 export default MainUserSlice.reducer;

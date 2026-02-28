@@ -24,7 +24,17 @@ export default function RegisterFirstPage() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      dispatch({ type: "FETCH_ADD_USER", payload: registerInputVal });
+      const formattedData: RegisterInputValType = Object.fromEntries(
+        Object.entries(registerInputVal).map(([key, value]) => [
+          key,
+          key === "password" || key === "repassword"
+            ? value
+            : typeof value === "string"
+              ? value.trim().toLowerCase()
+              : value,
+        ]),
+      ) as RegisterInputValType;
+      dispatch({ type: "FETCH_ADD_USER", payload: formattedData });
     } catch (error) {}
   };
   console.log("registerInputVal", registerInputVal);

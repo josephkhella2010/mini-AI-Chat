@@ -14,7 +14,17 @@ export default function LoginFirstContainer() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      dispatch({ type: "FETCH_LOGIN_USER", payload: loginInputVal });
+      const formattedData: loginPayload = Object.fromEntries(
+        Object.entries(loginInputVal).map(([key, value]) => [
+          key,
+          key === "password"
+            ? value
+            : typeof value === "string"
+              ? value.trim().toLowerCase()
+              : value,
+        ]),
+      ) as loginPayload;
+      dispatch({ type: "FETCH_LOGIN_USER", payload: formattedData });
     } catch (error) {}
   };
 

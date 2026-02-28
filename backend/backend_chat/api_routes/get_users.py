@@ -11,7 +11,9 @@ def get_users(req):
     
     try:
         usersdb=User.objects.all()
-        users=list(map(lambda u:{"id":u.id,"username":u.username,"email":u.email
+        users=list(map(lambda u:{"id":u.id,
+                                 "username":u.username,
+                                 "email":u.email
                                  ,"firstname":u.firstname,
                                  "lastname":u.lastname,
                                  "dateOfBirth":u.dateOfBirth,
