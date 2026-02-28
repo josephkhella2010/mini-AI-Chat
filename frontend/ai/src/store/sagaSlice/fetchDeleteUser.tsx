@@ -9,6 +9,7 @@ import type { SagaIterator } from "redux-saga";
 import type { UserType } from "../../utilities/interfaces";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
+import { setDeleteUser } from "../reduxSlice/MainUserSlice";
 interface RegisterResponse {
   msg: string;
   user: UserType;
@@ -27,8 +28,12 @@ function* fetchDeleteUser(action: PayloadAction<number>): SagaIterator {
       true,
     );
 
-    const { msg } = response;
-
+    const { user, msg } = response;
+    const userId = user?.id;
+    if (!userId) {
+      return;
+    }
+    yield put(setDeleteUser(userId));
     yield put(setClearLoading());
     toast.success(msg);
   } catch (error: any) {

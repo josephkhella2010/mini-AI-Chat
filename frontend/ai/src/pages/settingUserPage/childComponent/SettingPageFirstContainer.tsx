@@ -27,7 +27,18 @@ export default function SettingPageFirstContainer() {
       <div>
         <ul>
           <li>Update User</li>
-          <li> Delete User</li>
+          <li
+            onClick={() => {
+              dispatch({
+                type: "FETCH_DELETE_USER",
+                payload: singleUser?.user?.id,
+              });
+              navigate("/");
+            }}
+          >
+            {" "}
+            Delete User
+          </li>
           <li
             onClick={() => {
               dispatch(setLogoutUser());
