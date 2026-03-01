@@ -23,6 +23,9 @@ export default function SettingPageFirstContainer({
     <div>
       <div>
         <ul>
+          <li onClick={() => navigate(`/user-details/${userId}`)}>
+            User Information
+          </li>
           <li
             onClick={() => {
               if (!userId) return;

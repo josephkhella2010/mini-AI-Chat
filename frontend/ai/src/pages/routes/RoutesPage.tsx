@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import LoginMainPage from "../login/LoginMainPage";
 import NavigationContainer from "../navigation/NavigationMainContainer";
 import SettingUserPage from "../settingUserPage/SettingUserPage";
+import UserDetailsInfo from "../settingUserPage/childComponent/UserDetailsInfo";
 export default function RoutesPage() {
   return (
     <div>
@@ -17,6 +18,7 @@ export default function RoutesPage() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginMainPage />} />
           <Route path="/user-setting/:userId" element={<SettingUserPage />} />
+          <Route path="/user-details/:userId" element={<UserDetailsInfo />} />
         </Routes>
       </Router>
     </div>

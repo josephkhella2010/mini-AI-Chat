@@ -58,8 +58,7 @@ export default function SettingUserPage() {
   };
   const handleSave = (e: React.FormEvent<HTMLInputElement>) => {
     e.preventDefault();
-    setEditId(null);
-    setShowSaveContainer(false);
+
     const normalizedData = {
       ...saveInputVal,
       username: saveInputVal.username.toLowerCase(),
@@ -75,6 +74,8 @@ export default function SettingUserPage() {
         data: normalizedData,
       },
     });
+    setEditId(null);
+    setShowSaveContainer(false);
     /* 
     setSaveInputVal({
       username: saveInputVal.username,
