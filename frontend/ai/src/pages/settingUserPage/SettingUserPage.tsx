@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import SaveUpdateSection from "./childComponent/SaveUpdateSection";
 import type { SaveInputValType } from "../../utilities/interfaces";
-import { setUsers } from "../../store/reduxSlice/MainUserSlice";
 
 export default function SettingUserPage() {
   const dispatch = useDispatch();
@@ -60,7 +59,23 @@ export default function SettingUserPage() {
   const handleSave = (e: React.FormEvent<HTMLInputElement>) => {
     e.preventDefault();
     setEditId(null);
+    setShowSaveContainer(false);
+    const normalizedData = {
+      ...saveInputVal,
+      username: saveInputVal.username.toLowerCase(),
+      email: saveInputVal.email.toLowerCase(),
+      firstname: saveInputVal.firstname.toLowerCase(),
+      lastname: saveInputVal.lastname.toLowerCase(),
+    };
 
+    dispatch({
+      type: "FETCH_UPDATE_USER",
+      payload: {
+        userId: Number(userId),
+        data: normalizedData,
+      },
+    });
+    /* 
     setSaveInputVal({
       username: saveInputVal.username,
       email: saveInputVal.email,
@@ -89,7 +104,7 @@ export default function SettingUserPage() {
       dateOfBirth: saveInputVal.dateOfBirth,
     };
 
-    dispatch(setUsers(updatedUsers)); // 🔥 important
+    dispatch(setUsers(updatedUsers)); // 🔥 important */
   };
 
   console.log("saveInputVal", saveInputVal);

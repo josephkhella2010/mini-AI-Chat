@@ -55,6 +55,19 @@ const MainUserSlice = createSlice({
         sessionStorage.removeItem("token");
       }
     },
+    setUpdateUser: (
+      state,
+      action: PayloadAction<{ userId: number; data: UserType }>,
+    ) => {
+      const copyUser = [...state.users];
+      const findUserIndex = copyUser.findIndex(
+        (u) => Number(u.id) === Number(action.payload.userId),
+      );
+      if (findUserIndex == -1) return;
+      copyUser[findUserIndex] = action.payload.data;
+      state.users = copyUser;
+      state.singleUser.user=copyUser[findUserIndex] 
+    },
   },
 });
 export const {
@@ -63,5 +76,6 @@ export const {
   setLogInUser,
   setLogoutUser,
   setDeleteUser,
+  setUpdateUser,
 } = MainUserSlice.actions;
 export default MainUserSlice.reducer;

@@ -35,6 +35,15 @@ def update_user(req,user_id):
         for field in required_fields:
             if not data[field]:
                  return JsonResponse({"msg": "All field is required please fill all fields"}, status=400)
+            # 🔥 ADD THIS PART
+        if User.objects.filter(username=data.get("username")).exclude(id=token_user.id).exists():
+             return JsonResponse({"msg": "Username already exists"}, status=400)
+
+        if User.objects.filter(email=data.get("email")).exclude(id=token_user.id).exists():
+               return JsonResponse({"msg": "Email already exists"}, status=400)
+        
+        #store updates
+        
         token_user.firstname = data.get("firstname")
         token_user.lastname = data.get("lastname")
         token_user.email = data.get("email")
