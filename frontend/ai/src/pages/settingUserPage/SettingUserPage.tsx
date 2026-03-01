@@ -14,7 +14,7 @@ export default function SettingUserPage() {
     (state: RootState) => state.mainUserInfoData,
   );
   const { userId } = useParams();
-  const [editId, setEditId] = useState<number | null>(null);
+  const [_, setEditId] = useState<number | null>(null);
   const [showSaveContainer, setShowSaveContainer] = useState<boolean>(false);
   const [saveInputVal, setSaveInputVal] = useState<SaveInputValType>({
     username: "",
