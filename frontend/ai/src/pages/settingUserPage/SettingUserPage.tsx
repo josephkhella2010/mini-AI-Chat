@@ -124,7 +124,7 @@ export default function SettingUserPage() {
         />
       )}
       {users &&
-        users.map((u) => {
+        users.map((u, ind) => {
           return (
             <div
               style={{
@@ -132,6 +132,7 @@ export default function SettingUserPage() {
                 marginBottom: "10px",
                 padding: "10px",
               }}
+              key={ind}
             >
               <h4>name:{u.firstname + " " + u.lastname} </h4>
               <h4>Email:{u.email} </h4>
