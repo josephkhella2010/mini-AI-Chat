@@ -24,3 +24,12 @@ export const loginForm = [
 
 export const tokenStorage = sessionStorage.getItem("token");
 export const userStorage = localStorage.getItem("user");
+
+export const saveForm: registerFormType[] = [
+  { label: "First name", type: "text", name: "firstname" },
+  { label: "Last name", type: "text", name: "lastname" },
+  { label: "Date of Birth", type: "date", name: "dateOfBirth" },
+  { label: "Username", type: "text", name: "username" },
+  { label: "Email", type: "text", name: "email" },
+  { label: "Password", type: "password", name: "password" },
+];

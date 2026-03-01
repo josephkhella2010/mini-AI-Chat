@@ -1,32 +1,36 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
-import type { RootState } from "../../../store/store";
-import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { setLogoutUser } from "../../../store/reduxSlice/MainUserSlice";
+import type { singleUserType } from "../../../utilities/interfaces";
 
-export default function SettingPageFirstContainer() {
-  const { users, singleUser } = useSelector(
-    (state: RootState) => state.mainUserInfoData,
-  );
-  const { userId } = useParams();
+interface PropsType {
+  singleUser: singleUserType;
+  handleEdit: (userId: number) => void;
+}
+
+export default function SettingPageFirstContainer({
+  singleUser,
+  handleEdit,
+}: PropsType) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const userId = singleUser?.user?.id;
 
   console.log("singleUser in setting Page", singleUser);
-
-  /* function */
-  const filteredUser = users.find((user) => user.id === Number(userId));
-  console.log("filteredUser", filteredUser);
-  useEffect(() => {
-    dispatch({ type: "FETCH_USERS" });
-  }, [dispatch]);
 
   /*  */
   return (
     <div>
       <div>
         <ul>
-          <li>Update User</li>
+          <li
+            onClick={() => {
+              if (!userId) return;
+              handleEdit(userId);
+            }}
+          >
+            Update User
+          </li>
           <li
             onClick={() => {
               dispatch({

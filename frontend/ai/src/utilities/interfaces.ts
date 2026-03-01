@@ -39,7 +39,19 @@ export interface RegisterPayload {
   lastname: string;
   dateOfBirth: string;
 }
+export interface SaveInputValType {
+  username: string;
+  email: string;
+  password: string;
+  firstname: string;
+  lastname: string;
+  dateOfBirth: string;
+}
 export interface loginPayload {
   username: string;
   password: string;
+}
+export interface singleUserType {
+  user: UserType | null;
+  token?: string | null;
 }
