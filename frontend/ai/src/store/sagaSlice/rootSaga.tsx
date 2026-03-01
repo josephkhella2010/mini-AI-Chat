@@ -3,6 +3,7 @@ import { watchfetchUsers } from "./fetchGetUsers";
 import { watchFetchAddUser } from "./fetchRegisterUser";
 import { watchFetchLoginUser } from "./fetchLoginUser";
 import { watchFetchDeleteUser } from "./fetchDeleteUser";
+import { watchFetchUpdateUser } from "./fetchUpdateUser";
 
 export default function* rootSaga() {
   yield all([
@@ -10,5 +11,6 @@ export default function* rootSaga() {
     watchFetchAddUser(),
     watchFetchLoginUser(),
     watchFetchDeleteUser(),
+    watchFetchUpdateUser(),
   ]);
 }
