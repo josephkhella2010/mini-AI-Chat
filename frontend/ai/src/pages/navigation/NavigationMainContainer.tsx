@@ -3,8 +3,25 @@ import { useNavigate } from "react-router-dom";
 import type { RootState } from "../../store/store";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+import { createUseStyles } from "react-jss";
 
+export const cssStyle = createUseStyles({
+  navigationMainContainer: {
+    height: "50px",
+    width: "100%",
+
+    backgroundColor: "olivedrab",
+  },
+  navigationContainer: {
+    display: "flex",
+    gap: "20px",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%",
+  },
+});
 export default function NavigationMainContainer() {
+  const classes = cssStyle();
   const navigate = useNavigate();
   const { singleUser } = useSelector(
     (state: RootState) => state.mainUserInfoData,
@@ -38,8 +55,8 @@ export default function NavigationMainContainer() {
 
   console.log("singleUser", singleUser);
   return (
-    <div>
-      <ul>
+    <div className={classes.navigationMainContainer}>
+      <ul className={classes.navigationContainer}>
         <li onClick={() => navigate("/")}>Home</li>
         <li onClick={() => navigate("/register")}>Register</li>
         <li onClick={() => navigate("/login")}>Login</li>

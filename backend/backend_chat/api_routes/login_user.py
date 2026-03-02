@@ -35,7 +35,8 @@ def login_user(req):
                 "lastname": Exist_user.lastname,
                 "dateOfBirth": Exist_user.dateOfBirth,
                 "password":Exist_user.password,
-                "items":[item.id for item in Exist_user.items.all()]
+                "items":list(map(lambda i:{"id":i.id,"question":i.question,"answer":i.answer},Exist_user.items.all()))
+
             }
             return JsonResponse({"msg":"user successfully login","user":user, "token": token},status=201)
 

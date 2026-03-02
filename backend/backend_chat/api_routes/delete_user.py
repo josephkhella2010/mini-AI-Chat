@@ -35,7 +35,7 @@ def delete_user(req,user_id):
                        "dateOfBirth": token_user.dateOfBirth,
                         "password":token_user.password,
                         "items": [
-                            {"id": it.id, "name": it.name}
+                            {"id": it.id, "question": it.question,"answer":it.answer}
                             for it in items_list]}
         token_user.delete()
 

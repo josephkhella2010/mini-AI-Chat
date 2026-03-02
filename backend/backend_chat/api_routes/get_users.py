@@ -18,7 +18,7 @@ def get_users(req):
                                  "lastname":u.lastname,
                                  "dateOfBirth":u.dateOfBirth,
                                  "password":u.password,
-                                 "items":(list(map(lambda it: {"id":it.id,"name":it.name},u.items.all())))
+                                 "items":list(map(lambda i:{"id":i.id,"question":i.question,"answer":i.answer},u.items.all()))
                                  },usersdb))
         return JsonResponse({"users":users},status=200)
     

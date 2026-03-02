@@ -1,6 +1,7 @@
 export interface ItemType {
   id?: number;
-  text: string;
+  question: string;
+  answer: string;
 }
 
 export interface UserType {

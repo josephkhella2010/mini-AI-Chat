@@ -3,12 +3,14 @@ from .user_info_schema import User
 
 
 class Item(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(
         User,
         related_name="items",
         on_delete=models.CASCADE
     )
-    text = models.CharField(max_length=255)
+    question = models.TextField()
+    answer = models.TextField()
 
     def __str__(self):
-        return self.text
+        return self.question

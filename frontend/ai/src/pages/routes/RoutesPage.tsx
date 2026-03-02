@@ -7,6 +7,7 @@ import LoginMainPage from "../login/LoginMainPage";
 import NavigationContainer from "../navigation/NavigationMainContainer";
 import SettingUserPage from "../settingUserPage/SettingUserPage";
 import UserDetailsInfo from "../settingUserPage/childComponent/UserDetailsInfo";
+import ChatPage from "../Chat/ChatPage";
 export default function RoutesPage() {
   return (
     <div>
@@ -19,6 +20,7 @@ export default function RoutesPage() {
           <Route path="/login" element={<LoginMainPage />} />
           <Route path="/user-setting/:userId" element={<SettingUserPage />} />
           <Route path="/user-details/:userId" element={<UserDetailsInfo />} />
+          <Route path="/ai-chat" element={<ChatPage />} />
         </Routes>
       </Router>
     </div>
