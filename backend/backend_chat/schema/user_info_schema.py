@@ -25,7 +25,8 @@ class User(models.Model):
             "items": [
                 {
                     "id": item.id,
-                    "text": item.text
+                    "question": item.question,
+                    "answer":item.answer
                 }
                 for item in self.items.all()
             ]
