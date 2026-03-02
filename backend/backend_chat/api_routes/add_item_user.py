@@ -1,0 +1,60 @@
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from ..models import User
+from ..models import Item
+from django.db.models import Q
+from ..auth.jwt import decode_jwt
+
+
+@csrf_exempt
+
+def add_item_user(req,user_id):
+    if req.method !="POST":
+        return JsonResponse({"error":"Method is not Allowed"},status=405)
+    try:
+        auth_header=req.headers.get("Authorization")
+        if not auth_header:
+            return JsonResponse({"msg":"Please Login first"},status=401)
+        token =auth_header.split(" ")[1]
+        payload=decode_jwt(token)
+        if not payload:
+            return JsonResponse({"msg":"Token is not valid"},status=401)
+        token_user_id=payload.get("user_id")
+        token_user=User.objects.filter(id =token_user_id).first()
+
+        if  not token_user:
+            return JsonResponse({"msg":"User is not found"},status=404)
+         # 🔒 Only allow self-delete
+        if token_user.id != int(user_id):
+            return JsonResponse({"error": "Permission denied"}, status=403)
+        # 🔥 add item
+        data=json.loads(req.body)
+        
+
+        createdItem=Item.objects.create(
+            user=token_user, 
+            question=data["question"],
+            answer=data["answer"]
+        )
+        user={
+            "id":token_user.id,
+            "firstname":token_user.firstname,
+            "lastname":token_user.lastname,
+            "email":token_user.email,
+            "username":token_user.username,
+            "password":token_user.password,
+            "items":list(map(lambda i:{"id":i.id,"question":i.question,"answer":i.answer},token_user.items.all()))
+        }
+
+        return JsonResponse({"msg": "successfully added item",  "user": user,"new-item":
+                             
+                {
+                    "id": createdItem.id,
+                    "question": createdItem.question,
+                    "answer": createdItem.answer
+                }}, status=200)
+
+    except Exception as e:
+        return JsonResponse({"error":str(e)},status=500)
