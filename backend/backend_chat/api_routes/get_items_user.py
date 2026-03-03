@@ -30,8 +30,24 @@ def get_items_user(req,user_id):
         if token_user.id != int(user_id):
             return JsonResponse({"error": "Permission denied"}, status=403)
         user_items = Item.objects.filter(user_id=user_id)
-        return JsonResponse({"msg":"Get All ","items":
-                      list(map(lambda i:{"id": i.id,"question":i.question,"answer":i.answer}, user_items))},status=200)
+        return JsonResponse({"msg":"Get All ",
+                                     "items": [
+                                   {
+                                       "chatId": chat.id,
+                                       "chatItems": [
+                                          {
+                                               "id": item.id,
+                                               "question": item.question,
+                                               "answer": item.answer
+                                           }
+                                           for item in chat.chatItems.all()
+                                       ]
+                                   }
+                                for chat in user_items()
+                               ] }
+                             
+                             
+                        ,status=200)
     except Exception as e:
         return JsonResponse({"error":str(e)},status=500)
 

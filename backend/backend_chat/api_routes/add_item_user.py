@@ -48,7 +48,20 @@ def add_item_user(req,user_id):
             "email":token_user.email,
             "username":token_user.username,
             "password":token_user.password,
-            "items":list(map(lambda i:{"id":i.id,"question":i.question,"answer":i.answer},token_user.items.all()))
+             "items": [
+                          {
+                           "chatId": chat.id,
+                           "chatItems": [
+                              {
+                                   "id": item.id,
+                                   "question": item.question,
+                                   "answer": item.answer
+                               }
+                               for item in chat.chatItems.all()
+                           ]
+                       }
+                       for chat in token_user.items.all()
+                    ]  
         }
 
         return JsonResponse({"msg": "successfully added item",  "user": user,"new-item":

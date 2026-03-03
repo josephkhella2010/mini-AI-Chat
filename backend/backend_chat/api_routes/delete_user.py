@@ -33,10 +33,23 @@ def delete_user(req,user_id):
                        "firstname": token_user.firstname,
                        "lastname": token_user.lastname,
                        "dateOfBirth": token_user.dateOfBirth,
-                        "password":token_user.password,
+                        "password":token_user.password,  
                         "items": [
-                            {"id": it.id, "question": it.question,"answer":it.answer}
-                            for it in items_list]}
+                                   {
+                                       "chatId": chat.id,
+                                       "chatItems": [
+                                          {
+                                               "id": item.id,
+                                               "question": item.question,
+                                               "answer": item.answer
+                                           }
+                                           for item in chat.chatItems.all()
+                                       ]
+                                   }
+                                for chat in token_user.items.all()
+                               ]        
+                                                                    
+                            }
         token_user.delete()
 
         return JsonResponse({"msg":"User Successfully Deleted","user":update_user},status=200)

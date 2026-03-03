@@ -58,8 +58,22 @@ def update_user(req,user_id):
             "lastname":data.get("lastname"),
             "email":data.get("email"),
             "username":data.get("username"),
-            "password": hashed_password,
-            "items":list(map(lambda i:{"id":i.id,"question":i.question,"answer":i.answer},token_user.items.all()))
+            "password": hashed_password,     
+             "items": [
+        {
+            "chatId": chat.id,
+            "chatItems": [
+                {
+                    "id": item.id,
+                    "question": item.question,
+                    "answer": item.answer
+                }
+                for item in chat.chatItems.all()
+            ]
+        }
+        for chat in token_user.items.all()
+    ]
+            
         }
 
         return JsonResponse({"msg":"User Successfully Updated","user":update_User},status=201)

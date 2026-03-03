@@ -18,7 +18,22 @@ def get_users(req):
                                  "lastname":u.lastname,
                                  "dateOfBirth":u.dateOfBirth,
                                  "password":u.password,
-                                 "items":list(map(lambda i:{"id":i.id,"question":i.question,"answer":i.answer},u.items.all()))
+                                 "items": [
+                                                       {
+                                                           "chatId": chat.id,
+                                                           "chatItems": [
+                                                               {
+                                                                   "id": item.id,
+                                                                   "question": item.question,
+                                                                   "answer": item.answer
+                                                               }
+                                                               for item in chat.chatItems.all()
+                                                           ]
+                                                       }
+                                                       for chat in usersdb.items.all()
+                                                   ]
+
+
                                  },usersdb))
         return JsonResponse({"users":users},status=200)
     
