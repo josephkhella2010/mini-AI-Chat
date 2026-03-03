@@ -13,17 +13,28 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
+from dotenv import load_dotenv
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+#####
+# 🔥 Force load .env from backend folder
+load_dotenv(BASE_DIR / ".env")
+
+
+OPEN_AI_ROUTER = os.getenv("OPENROUTER_API_KEY")
+
+SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 #SECRET_KEY = 'django-insecure-ue$-fpbu!u(kdc$(9y^8zf^3b_mr%n_gj&54$p+g0ae6)*fipa'
-SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
+#SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
