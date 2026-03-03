@@ -19,20 +19,19 @@ def get_users(req):
                                  "dateOfBirth":u.dateOfBirth,
                                  "password":u.password,
                                  "items": [
-                                                       {
-                                                           "chatId": chat.id,
-                                                           "chatItems": [
-                                                               {
-                                                                   "id": item.id,
-                                                                   "question": item.question,
-                                                                   "answer": item.answer
-                                                               }
-                                                               for item in chat.chatItems.all()
+                                        {
+                                         "chatId": chat.id,
+                                          "chatItems": [
+                                                    {
+                                                     "id": item.id,
+                                                      "question": item.question,
+                                                      "answer": item.answer
+                                                        }
+                                                        for item in chat.chatItems.all()
                                                            ]
                                                        }
-                                                       for chat in usersdb.items.all()
+                                                       for chat in u.items.all()
                                                    ]
-
 
                                  },usersdb))
         return JsonResponse({"users":users},status=200)
