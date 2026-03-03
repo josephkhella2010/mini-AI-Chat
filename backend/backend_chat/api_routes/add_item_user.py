@@ -6,7 +6,7 @@ from ..models import User
 from ..models import Item
 from django.db.models import Q
 from ..auth.jwt import decode_jwt
-
+from .open_ai import generate_answer
 
 @csrf_exempt
 
@@ -30,13 +30,16 @@ def add_item_user(req,user_id):
         if token_user.id != int(user_id):
             return JsonResponse({"error": "Permission denied"}, status=403)
         # 🔥 add item
+
         data=json.loads(req.body)
-        
+        question = data["question"]
+        ai_answer = generate_answer(question)
 
         createdItem=Item.objects.create(
             user=token_user, 
-            question=data["question"],
-            answer=data["answer"]
+            question=question,
+                answer=ai_answer
+
         )
         user={
             "id":token_user.id,
