@@ -22,12 +22,18 @@ class User(models.Model):
                 "last_name": self.lastname,
                 "date_of_birth": self.dateOfBirth,
             },
-            "items": [
-                {
-                    "id": item.id,
-                    "question": item.question,
-                    "answer":item.answer
-                }
-                for item in self.items.all()
-            ]
+        "items": [
+            {
+                "chatId": chat.id,
+                "chatItems": [
+                    {
+                        "id": item.id,
+                        "question": item.question,
+                        "answer": item.answer
+                    }
+                    for item in chat.chatItems.all()
+                ]
+            }
+            for chat in self.items.all()   # items now means chats
+        ]
         }
