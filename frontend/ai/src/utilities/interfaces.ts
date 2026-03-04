@@ -1,7 +1,12 @@
-export interface ItemType {
+export interface ItemsChatType {
   id?: number;
   question: string;
   answer: string;
+}
+
+export interface ChatType {
+  chatId?: number;
+  chatItems: ItemsChatType[];
 }
 
 export interface UserType {
@@ -12,7 +17,7 @@ export interface UserType {
   firstname: string;
   lastname: string;
   dateOfBirth: string;
-  items: ItemType[];
+  items: ChatType[];
 }
 
 export interface registerFormType {

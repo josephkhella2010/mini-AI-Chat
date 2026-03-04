@@ -1,11 +1,12 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { UserType } from "../../utilities/interfaces";
+import type { ChatType, UserType } from "../../utilities/interfaces";
 import { tokenStorage, userStorage } from "../../utilities/Arrays";
 const userStoraged = userStorage ? JSON.parse(userStorage as string) : null;
 const tokenStoraged = tokenStorage ? tokenStorage : null;
 
 interface initialStateType {
   users: UserType[];
+  items: ChatType[];
   singleUser: {
     user: UserType | null;
     token: string | null;
@@ -17,6 +18,7 @@ const initialState: initialStateType = {
     user: userStoraged,
     token: tokenStoraged,
   },
+  items: [],
 };
 const MainUserSlice = createSlice({
   name: "MainUserSlice",
@@ -66,7 +68,25 @@ const MainUserSlice = createSlice({
       if (findUserIndex == -1) return;
       copyUser[findUserIndex] = action.payload.data;
       state.users = copyUser;
-      state.singleUser.user=copyUser[findUserIndex] 
+      state.singleUser.user = copyUser[findUserIndex];
+    },
+    /* add items in user */
+    setAddChatToUser: (state, action: PayloadAction<ChatType>) => {
+      state.items.push(action.payload);
+      // 2️⃣ update logged-in user chats
+      if (state.singleUser.user) {
+        if (!state.singleUser.user.items) {
+          state.singleUser.user.items = [];
+        }
+
+        state.singleUser.user.items.push(action.payload);
+
+        // 3️⃣ sync localStorage
+        localStorage.setItem("user", JSON.stringify(state.singleUser.user));
+      }
+    },
+    setGetAllChatUser: (state, action: PayloadAction<ChatType[]>) => {
+      state.items = action.payload;
     },
   },
 });
@@ -77,5 +97,7 @@ export const {
   setLogoutUser,
   setDeleteUser,
   setUpdateUser,
+  setAddChatToUser,
+  setGetAllChatUser,
 } = MainUserSlice.actions;
 export default MainUserSlice.reducer;
