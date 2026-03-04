@@ -51,7 +51,10 @@ def add_chat_in_items(req,user_id):
         }
     
         return JsonResponse(
-            {"msg": "chat items is created successfully", "user": user_data,"newChat":new_chat},
+            {"msg": "chat items is created successfully", "user": user_data,"newChat": {
+            "chatId": new_chat.id,
+            "chatItems": []  # empty because it's newly created
+        }},
             status=200
         )
         
