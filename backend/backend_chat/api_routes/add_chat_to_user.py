@@ -9,7 +9,7 @@ from ..auth.jwt import decode_jwt
 
 @csrf_exempt
 
-def add_chat_in_items(req,user_id):
+def add_chat_to_user(req,user_id):
     if req.method !="POST":
         return JsonResponse({"error":"methods is not Valid"},status=500)
     try:
@@ -44,7 +44,7 @@ def add_chat_in_items(req,user_id):
             "items": [
                 {
                     "chatId": chat.id,
-                    "chatItems": []  # empty because no messages yet
+                    "chatItems": []  
                 }
                 for chat in token_user.items.all()
             ]
@@ -53,7 +53,7 @@ def add_chat_in_items(req,user_id):
         return JsonResponse(
             {"msg": "chat items is created successfully", "user": user_data,"newChat": {
             "chatId": new_chat.id,
-            "chatItems": []  # empty because it's newly created
+            "chatItems": []  
         }},
             status=200
         )
