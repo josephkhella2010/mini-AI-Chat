@@ -39,7 +39,6 @@ def add_item_to_chat(req,user_id,chat_id):
 
         createdItem=Item.objects.create(
                chat=chat,  # 🔥 VERY IMPORTANT
-               user=token_user,
                question=question,
                answer=ai_answer
         )
