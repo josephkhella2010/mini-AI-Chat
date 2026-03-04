@@ -17,7 +17,8 @@ def login_user(req):
         data=json.loads(req.body)
         required_fields=["username","password"]
         for field in required_fields:
-            if not data[field]:
+            if field not in data or not data[field]:
+
                 return JsonResponse({"msg":f"all fields  is required"},status=400)
             Exist_user=User.objects.filter(( Q(username=data["username"]) | Q(email=data["username"]))).first()
             if not Exist_user:
