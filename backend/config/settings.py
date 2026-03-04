@@ -37,12 +37,14 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 #SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "False") == "True"
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
-
-render_host = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
-if render_host:
-    ALLOWED_HOSTS.append(render_host)
+#ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+#render_host = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+#if render_host:
+    #ALLOWED_HOSTS.append(render_host)
 # 👇 ADD THIS BELOW
+ALLOWED_HOSTS = ["*"]
+
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
      "https://mini-ai-chat-x36r.onrender.com",
