@@ -51,7 +51,7 @@ def add_chat_to_user(req,user_id):
         }
     
         return JsonResponse(
-            {"msg": "chat items is created successfully", "user": user_data,"newChat": {
+            {"msg": "chat items is created successfully", "user": user_data,"chat": {
             "chatId": new_chat.id,
             "chatItems": []  
         }},

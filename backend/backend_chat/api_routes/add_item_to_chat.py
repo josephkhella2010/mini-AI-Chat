@@ -78,7 +78,7 @@ def add_item_to_chat(req,user_id,chat_id):
         }
 
         return JsonResponse({"msg": "successfully added item", "user": user,
-                             "new-item":updated_chat},status=200)
+                             "item":updated_chat},status=200)
 
     except Exception as e:
         return JsonResponse({"error":str(e)},status=500)
