@@ -13,6 +13,6 @@ urlpatterns = [
     path('delete-user/userId=<int:user_id>', delete_user),
     path("update-user/userId=<int:user_id>", update_user),
     path("add-chat/userId=<int:user_id>",  add_chat_to_user ) , 
-    path("add-item-user/userId=<int:user_id>/chatId=<int:chat_id>",add_item_to_chat ) , 
+    path("add-chat-item/userId=<int:user_id>/chatId=<int:chat_id>",add_item_to_chat ) , 
 
 ]
