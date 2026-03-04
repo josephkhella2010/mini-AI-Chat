@@ -2,15 +2,14 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-from ..models import User
-from ..models import Item
+from ..models import User,Item,Chat
 from django.db.models import Q
 from ..auth.jwt import decode_jwt
 from .open_ai import generate_answer
 
 @csrf_exempt
 
-def add_item_user(req,user_id):
+def add_item_to_chat(req,user_id,chat_id):
     if req.method !="POST":
         return JsonResponse({"error":"Method is not Allowed"},status=405)
     try:
@@ -34,13 +33,28 @@ def add_item_user(req,user_id):
         data=json.loads(req.body)
         question = data["question"]
         ai_answer = generate_answer(question)
+        chat = Chat.objects.filter(id=chat_id, user=token_user).first()
+        if not chat:
+           return JsonResponse({"error": "Chat not found"}, status=404)
 
         createdItem=Item.objects.create(
-            user=token_user, 
-            question=question,
-                answer=ai_answer
-
+               chat=chat,  # 🔥 VERY IMPORTANT
+               user=token_user,
+               question=question,
+               answer=ai_answer
         )
+        updated_chat = {
+                "chatId": chat.id,
+                "chatItems": [
+                    {
+                        "id": item.id,
+                                                "question": item.question,
+                        "answer": item.answer
+                    }
+                    for item in chat.chatItems.all()
+                   ]
+                      }
+
         user={
             "id":token_user.id,
             "firstname":token_user.firstname,
@@ -49,7 +63,7 @@ def add_item_user(req,user_id):
             "username":token_user.username,
             "password":token_user.password,
              "items": [
-                          {
+                        {
                            "chatId": chat.id,
                            "chatItems": [
                               {
@@ -64,13 +78,8 @@ def add_item_user(req,user_id):
                     ]  
         }
 
-        return JsonResponse({"msg": "successfully added item",  "user": user,"new-item":
-                             
-                {
-                    "id": createdItem.id,
-                    "question": createdItem.question,
-                    "answer": createdItem.answer
-                }}, status=200)
+        return JsonResponse({"msg": "successfully added item", "user": user,
+                             "new-item":updated_chat},status=200)
 
     except Exception as e:
         return JsonResponse({"error":str(e)},status=500)
