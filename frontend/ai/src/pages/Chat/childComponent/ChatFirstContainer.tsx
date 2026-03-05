@@ -1,7 +1,7 @@
 import { createUseStyles } from "react-jss";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../../../store/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const cssStyle = createUseStyles({
   chatFirstMainContainer: {
@@ -25,13 +25,19 @@ export const cssStyle = createUseStyles({
     width: "100%",
     height: "50px",
     position: "absolute",
-    top: "100%",
+    top: "95%",
+    overflowY: "auto",
+    "& textarea": {
+      width: "80%",
+      minHeight: "50px",
+    },
   },
 });
 
 export default function ChatFirstContainer() {
   const classes = cssStyle();
   const dispatch = useDispatch();
+  const [chatInput, setChatInput] = useState<string>("");
   const { users, singleUser } = useSelector(
     (state: RootState) => state.mainUserInfoData,
   );
@@ -42,6 +48,7 @@ export default function ChatFirstContainer() {
   const userId = getId?.id;
   console.log(userId);
   console.log("singleUser ", singleUser);
+  console.log("chatInput", chatInput);
 
   /* function */
   useEffect(() => {
@@ -66,7 +73,14 @@ export default function ChatFirstContainer() {
         <h1>ChatFirstContainer</h1>
       </div>
       <div className={classes.chatInputSection}>
-        <div>input</div>
+        <div>
+          <textarea
+            placeholder="Hello and Welcom"
+            value={chatInput}
+            onChange={(e) => setChatInput(e.target.value)}
+          />
+          <button> send</button>
+        </div>
       </div>
     </div>
   );
