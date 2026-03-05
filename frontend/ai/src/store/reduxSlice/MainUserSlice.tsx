@@ -109,7 +109,7 @@ const MainUserSlice = createSlice({
       const findUser = state.users.find((u) => u.id === action.payload.userId);
       if (!findUser) return;
       const findChatIndex = findUser?.items.findIndex(
-        (it) => it.chatId == action.payload.userId,
+        (it) => it.chatId == action.payload.chatId,
       );
       if (findChatIndex === -1) return;
 

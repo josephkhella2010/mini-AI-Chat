@@ -80,7 +80,9 @@ export default function ChatFirstContainer() {
       payload: {
         userId: userId,
         chatId: Number(chatId),
-        data: chatInput,
+        data: {
+          question: chatInput,
+        },
       },
     });
   };
