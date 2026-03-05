@@ -98,6 +98,7 @@ const MainUserSlice = createSlice({
     setGetAllChatUser: (state, action: PayloadAction<ChatType[]>) => {
       state.items = action.payload;
     },
+
     setAddNewItemChat: (
       state,
       action: PayloadAction<{
@@ -106,14 +107,27 @@ const MainUserSlice = createSlice({
         data: ItemsChatType;
       }>,
     ) => {
-      const findUser = state.users.find((u) => u.id === action.payload.userId);
-      if (!findUser) return;
-      const findChatIndex = findUser?.items.findIndex(
-        (it) => it.chatId == action.payload.chatId,
+      const chatIndex = state.items.findIndex(
+        (c) => c.chatId === action.payload.chatId,
       );
-      if (findChatIndex === -1) return;
 
-      findUser.items[findChatIndex].chatItems.push(action.payload.data);
+      if (chatIndex === -1) return;
+      state.items[chatIndex].chatItems.push(action.payload.data);
+
+      if (!state.singleUser.user) return;
+
+      // update single user
+      const userChatIndex = state.singleUser.user.items.findIndex(
+        (c) => c.chatId === action.payload.chatId,
+      );
+
+      if (userChatIndex !== -1) {
+        state.singleUser.user.items[userChatIndex].chatItems.push(
+          action.payload.data,
+        );
+      }
+
+      localStorage.setItem("user", JSON.stringify(state.singleUser.user));
     },
   },
 });
