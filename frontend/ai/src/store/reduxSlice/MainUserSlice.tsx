@@ -43,6 +43,7 @@ const MainUserSlice = createSlice({
       state.singleUser.user = null;
       state.singleUser.token = null;
       localStorage.removeItem("user");
+      localStorage.removeItem("token"); // if you stored token separately
       sessionStorage.removeItem("token");
     },
     setDeleteUser: (state, action: PayloadAction<number>) => {

@@ -38,7 +38,7 @@ export default function ChatFirstContainer() {
   const classes = cssStyle();
   const dispatch = useDispatch();
   const [chatInput, setChatInput] = useState<string>("");
-  const { users, singleUser } = useSelector(
+  const { users, singleUser, items } = useSelector(
     (state: RootState) => state.mainUserInfoData,
   );
   const storagedUser = localStorage.getItem("user");
@@ -46,14 +46,26 @@ export default function ChatFirstContainer() {
   const userStoragedId = user?.id;
   const getId = users.find((u) => u.id === userStoragedId);
   const userId = getId?.id;
-  console.log(userId);
   console.log("singleUser ", singleUser);
   console.log("chatInput", chatInput);
+  console.log("items", items);
 
   /* function */
   useEffect(() => {
     dispatch({ type: "FETCH_USERS" });
   }, []);
+
+  useEffect(() => {
+    if (userId) {
+      dispatch({
+        type: "FETCH_ALL_CHATS_USER",
+        payload: { userId },
+      });
+    }
+  }, [dispatch, userId]);
+  console.log(userId);
+
+  /*  */
   return (
     <div className={classes.chatFirstMainContainer}>
       <div className={classes.chatFirstContent}>
