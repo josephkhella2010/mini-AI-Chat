@@ -38,6 +38,7 @@ export default function ChatFirstContainer() {
   const classes = cssStyle();
   const dispatch = useDispatch();
   const [chatInput, setChatInput] = useState<string>("");
+  const chatId = localStorage.getItem("chatId") || null;
   const { users, singleUser, items } = useSelector(
     (state: RootState) => state.mainUserInfoData,
   );
@@ -49,7 +50,7 @@ export default function ChatFirstContainer() {
   console.log("singleUser ", singleUser);
   console.log("chatInput", chatInput);
   console.log("items", items);
-
+  console.log("chatId", chatId);
   /* function */
   useEffect(() => {
     dispatch({ type: "FETCH_USERS" });
@@ -65,22 +66,30 @@ export default function ChatFirstContainer() {
   }, [dispatch, userId]);
   console.log(userId);
 
+  const handleAddChat = () => {
+    dispatch({
+      type: "FETCH_ADD_NEW_CHAT",
+      payload: {
+        userId: Number(userId),
+      },
+    });
+  };
+  const handleAddItemChat = () => {
+    dispatch({
+      type: "FETCH_ADD_NEW_ITEM_CHAT",
+      payload: {
+        userId: userId,
+        chatId: Number(chatId),
+        data: chatInput,
+      },
+    });
+  };
+
   /*  */
   return (
     <div className={classes.chatFirstMainContainer}>
       <div className={classes.chatFirstContent}>
-        <button
-          onClick={() =>
-            dispatch({
-              type: "FETCH_ADD_NEW_CHAT",
-              payload: {
-                userId: Number(userId),
-              },
-            })
-          }
-        >
-          New Chat
-        </button>
+        <button onClick={() => handleAddChat()}>New Chat</button>
         <h1>ChatFirstContainer</h1>
         <h1>ChatFirstContainer</h1>
       </div>
@@ -91,7 +100,7 @@ export default function ChatFirstContainer() {
             value={chatInput}
             onChange={(e) => setChatInput(e.target.value)}
           />
-          <button> send</button>
+          <button onClick={handleAddItemChat}> send</button>
         </div>
       </div>
     </div>

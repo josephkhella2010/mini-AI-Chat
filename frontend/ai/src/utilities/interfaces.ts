@@ -5,7 +5,7 @@ export interface ItemsChatType {
 }
 
 export interface ChatType {
-  chatId?: number;
+  chatId?: number | null;
   chatItems: ItemsChatType[];
 }
 

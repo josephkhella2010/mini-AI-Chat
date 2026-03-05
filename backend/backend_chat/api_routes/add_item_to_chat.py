@@ -31,11 +31,19 @@ def add_item_to_chat(req,user_id,chat_id):
         # 🔥 add item
 
         data=json.loads(req.body)
-        question = data["question"]
+
+        if not isinstance(data, dict):
+           return JsonResponse({"error": "Invalid JSON format"}, status=400)
+
+        question = data.get("question")
         ai_answer = generate_answer(question)
         chat = Chat.objects.filter(id=chat_id, user=token_user).first()
         if not chat:
            return JsonResponse({"error": "Chat not found"}, status=404)
+        print("RAW BODY:", req.body)
+        data = json.loads(req.body)
+        print("DATA:", data)
+        print("TYPE:", type(data))
 
         createdItem=Item.objects.create(
                chat=chat,  # 🔥 VERY IMPORTANT
@@ -78,7 +86,12 @@ def add_item_to_chat(req,user_id,chat_id):
         }
 
         return JsonResponse({"msg": "successfully added item", "user": user,
-                             "item":updated_chat},status=200)
+        "item": {
+             "id": createdItem.id,
+             "question": createdItem.question,
+              "answer": createdItem.answer
+                }
+         ,"chatItems":updated_chat},status=200)
 
     except Exception as e:
         return JsonResponse({"error":str(e)},status=500)

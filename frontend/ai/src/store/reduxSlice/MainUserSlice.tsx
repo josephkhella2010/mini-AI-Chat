@@ -1,5 +1,9 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { ChatType, UserType } from "../../utilities/interfaces";
+import type {
+  ChatType,
+  ItemsChatType,
+  UserType,
+} from "../../utilities/interfaces";
 import { tokenStorage, userStorage } from "../../utilities/Arrays";
 const userStoraged = userStorage ? JSON.parse(userStorage as string) : null;
 const tokenStoraged = tokenStorage ? tokenStorage : null;
@@ -11,7 +15,9 @@ interface initialStateType {
     user: UserType | null;
     token: string | null;
   };
+  chatId: string | null;
 }
+const chatIdStorage = localStorage.getItem("chatId");
 const initialState: initialStateType = {
   users: [],
   singleUser: {
@@ -19,6 +25,7 @@ const initialState: initialStateType = {
     token: tokenStoraged,
   },
   items: [],
+  chatId: chatIdStorage ? chatIdStorage : null,
 };
 const MainUserSlice = createSlice({
   name: "MainUserSlice",
@@ -85,9 +92,28 @@ const MainUserSlice = createSlice({
         // 3️⃣ sync localStorage
         localStorage.setItem("user", JSON.stringify(state.singleUser.user));
       }
+      const getId = action.payload.chatId;
+      localStorage.setItem("chatId", String(getId));
     },
     setGetAllChatUser: (state, action: PayloadAction<ChatType[]>) => {
       state.items = action.payload;
+    },
+    setAddNewItemChat: (
+      state,
+      action: PayloadAction<{
+        userId: number;
+        chatId: number;
+        data: ItemsChatType;
+      }>,
+    ) => {
+      const findUser = state.users.find((u) => u.id === action.payload.userId);
+      if (!findUser) return;
+      const findChatIndex = findUser?.items.findIndex(
+        (it) => it.chatId == action.payload.userId,
+      );
+      if (findChatIndex === -1) return;
+
+      findUser.items[findChatIndex].chatItems.push(action.payload.data);
     },
   },
 });
@@ -100,5 +126,6 @@ export const {
   setUpdateUser,
   setAddChatToUser,
   setGetAllChatUser,
+  setAddNewItemChat,
 } = MainUserSlice.actions;
 export default MainUserSlice.reducer;
