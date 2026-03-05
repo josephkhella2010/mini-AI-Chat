@@ -18,10 +18,12 @@ def jwt_required(view_func):
         except IndexError:
             return JsonResponse({"error": "Invalid token format"}, status=401)
 
-        payload = decode_jwt(token)
+        payload,error = decode_jwt(token)
 
         if not payload:
             return JsonResponse({"error": "Invalid or expired token"}, status=401)
+        if error:
+             return JsonResponse({"error": error}, status=401)
 
         try:
             user = User.objects.get(id=payload["user_id"])
