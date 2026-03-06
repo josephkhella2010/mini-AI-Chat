@@ -122,12 +122,6 @@ def update_user(req,user_id):
 
         hashed_password = make_password(data["password"])
 
-        required_fields=["username","email","password" ,"firstname","lastname","dateOfBirth"]
-
-        for field in required_fields:
-            if not data.get(field):
-                 return JsonResponse({"msg": "All field is required please fill all fields"}, status=400)
-
         # 🔥 ADD THIS PART
         if User.objects.filter(username=data.get("username")).exclude(id=token_user.id).exists():
              return JsonResponse({"msg": "Username already exists"}, status=400)
