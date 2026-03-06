@@ -1,5 +1,4 @@
 import { createUseStyles } from "react-jss";
-import type { ChatType } from "../../../utilities/interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../../../store/store";
 import { useEffect } from "react";
