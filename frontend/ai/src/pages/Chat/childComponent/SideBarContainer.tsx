@@ -1,4 +1,8 @@
 import { createUseStyles } from "react-jss";
+import type { ChatType } from "../../../utilities/interfaces";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "../../../store/store";
+import { useEffect } from "react";
 
 export const cssStyle = createUseStyles({
   sideBarWapper: {
@@ -22,8 +26,21 @@ export const cssStyle = createUseStyles({
     padding: "30px",
   },
 });
-export default function SideBarContainer() {
+
+interface PropsType {
+  userId: any;
+}
+export default function SideBarContainer({ userId }: PropsType) {
   const classes = cssStyle();
+  const dispatch = useDispatch();
+  const { items } = useSelector((state: RootState) => state.mainUserInfoData);
+  console.log("items", items);
+
+  useEffect(() => {
+    if (userId) {
+      dispatch({ type: "FETCH_ALL_CHATS_USER", payload: { userId: userId } });
+    }
+  }, [userId]);
 
   return (
     <div className={classes.sideBarWapper}>

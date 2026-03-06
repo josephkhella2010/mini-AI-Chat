@@ -6,7 +6,10 @@ from ..models import User,Item,Chat
 from django.db.models import Q
 from ..auth.jwt import decode_jwt
 from .open_ai import generate_answer
+from ..auth.decorators import jwt_required
 
+
+@jwt_required
 @csrf_exempt
 
 def add_item_to_chat(req,user_id,chat_id):
@@ -17,10 +20,12 @@ def add_item_to_chat(req,user_id,chat_id):
         if not auth_header:
             return JsonResponse({"msg":"Please Login first"},status=401)
         token =auth_header.split(" ")[1]
-        payload=decode_jwt(token)
-        if not payload:
-            return JsonResponse({"msg":"Token is not valid"},status=401)
-        token_user_id=payload.get("user_id")
+        payload, error = decode_jwt(token)
+
+        if error:
+              return JsonResponse({"msg": "Token is not valid"}, status=401)
+
+        token_user_id = payload.get("user_id")
         token_user=User.objects.filter(id =token_user_id).first()
 
         if  not token_user:
@@ -35,7 +40,7 @@ def add_item_to_chat(req,user_id,chat_id):
         if not isinstance(data, dict):
            return JsonResponse({"error": "Invalid JSON format"}, status=400)
 
-        question = data.get("question")
+        question = data["question"]
         ai_answer = generate_answer(question)
         chat = Chat.objects.filter(id=chat_id, user=token_user).first()
         if not chat:

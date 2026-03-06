@@ -1,7 +1,5 @@
 import { createUseStyles } from "react-jss";
-import { useDispatch, useSelector } from "react-redux";
-import type { RootState } from "../../../store/store";
-import { useEffect, useState } from "react";
+import type { ItemsChatType } from "../../../utilities/interfaces";
 
 export const cssStyle = createUseStyles({
   chatFirstMainContainer: {
@@ -33,67 +31,43 @@ export const cssStyle = createUseStyles({
     },
   },
 });
-
-export default function ChatFirstContainer() {
+interface PropsType {
+  handleAddItemChat: () => void;
+  handleAddChat: () => void;
+  chatItems: ItemsChatType[];
+  chatInput: string;
+  setChatInput: (chatInput: string) => void;
+}
+export default function ChatFirstContainer({
+  handleAddItemChat,
+  handleAddChat,
+  chatItems,
+  chatInput,
+  setChatInput,
+}: PropsType) {
   const classes = cssStyle();
-  const dispatch = useDispatch();
-  const [chatInput, setChatInput] = useState<string>("");
-  const chatId = localStorage.getItem("chatId") || null;
-  const { users, singleUser, items } = useSelector(
-    (state: RootState) => state.mainUserInfoData,
-  );
-  const storagedUser = localStorage.getItem("user");
-  const user = storagedUser ? JSON.parse(storagedUser) : {};
-  const userStoragedId = user?.id;
-  const getId = users.find((u) => u.id === userStoragedId);
-  const userId = getId?.id;
-  console.log("singleUser ", singleUser);
-  console.log("chatInput", chatInput);
-  console.log("items", items);
-  console.log("chatId", chatId);
-  /* function */
-  useEffect(() => {
-    dispatch({ type: "FETCH_USERS" });
-  }, []);
-
-  useEffect(() => {
-    if (userId) {
-      dispatch({
-        type: "FETCH_ALL_CHATS_USER",
-        payload: { userId },
-      });
-    }
-  }, [dispatch, userId]);
-  console.log(userId);
-
-  const handleAddChat = () => {
-    dispatch({
-      type: "FETCH_ADD_NEW_CHAT",
-      payload: {
-        userId: Number(userId),
-      },
-    });
-  };
-  const handleAddItemChat = () => {
-    dispatch({
-      type: "FETCH_ADD_NEW_ITEM_CHAT",
-      payload: {
-        userId: userId,
-        chatId: Number(chatId),
-        data: {
-          question: chatInput,
-        },
-      },
-    });
-  };
 
   /*  */
   return (
     <div className={classes.chatFirstMainContainer}>
       <div className={classes.chatFirstContent}>
         <button onClick={() => handleAddChat()}>New Chat</button>
-        <h1>ChatFirstContainer</h1>
-        <h1>ChatFirstContainer</h1>
+        {chatItems &&
+          chatItems.map((item, ind) => {
+            return (
+              <div
+                key={ind}
+                style={{
+                  border: "2px solid black",
+                  padding: "4px",
+                  marginBottom: "10px",
+                }}
+              >
+                <h2> question:{item.question}</h2>
+                <p>answer: {item.answer}</p>
+              </div>
+            );
+          })}
       </div>
       <div className={classes.chatInputSection}>
         <div>
