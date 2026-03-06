@@ -4,9 +4,8 @@ import type {
   ItemsChatType,
   UserType,
 } from "../../utilities/interfaces";
-import { tokenStorage, userStorage } from "../../utilities/Arrays";
+import { userStorage } from "../../utilities/Arrays";
 const userStoraged = userStorage ? JSON.parse(userStorage as string) : null;
-const tokenStoraged = tokenStorage ? tokenStorage : null;
 
 interface initialStateType {
   users: UserType[];
