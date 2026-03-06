@@ -29,12 +29,9 @@ def update_user(req,user_id):
         if token_user.id != int(user_id):
             return JsonResponse({"error": "Permission denied"}, status=403)
         data=json.loads(req.body)
-        hashed_password = make_password(data["password"])
 
-        required_fields=["username","email","password" ,"firstname","lastname","dateOfBirth"]
-        for field in required_fields:
-            if not data[field]:
-                 return JsonResponse({"msg": "All field is required please fill all fields"}, status=400)
+       
+
             # 🔥 ADD THIS PART
         if User.objects.filter(username=data.get("username")).exclude(id=token_user.id).exists():
              return JsonResponse({"msg": "Username already exists"}, status=400)
@@ -43,12 +40,14 @@ def update_user(req,user_id):
                return JsonResponse({"msg": "Email already exists"}, status=400)
         
         #store updates
-        
+        password = data.get("password")
         token_user.firstname = data.get("firstname")
         token_user.lastname = data.get("lastname")
         token_user.email = data.get("email")
         token_user.username = data.get("username")
-        token_user.password = hashed_password
+        if password:
+            hashed_password = make_password(password)
+            token_user.password = hashed_password
 
         token_user.save()
 
