@@ -24,12 +24,15 @@ def get_user_chat_items(req, user_id):
         parts = auth_header.split(" ")
         if len(parts) != 2:
             return JsonResponse({"msg": "Invalid Authorization header"}, status=401)
-
         token = parts[1]
 
-        payload = decode_jwt(token)
+        payload, error = decode_jwt(token)
+
+        if error:
+              return JsonResponse({"msg": error}, status=401)
+ 
         if not payload:
-            return JsonResponse({"msg": "Token is not valid"}, status=401)
+          return JsonResponse({"msg": "Token is not valid"}, status=401)
 
         token_user_id = payload.get("user_id")
 
