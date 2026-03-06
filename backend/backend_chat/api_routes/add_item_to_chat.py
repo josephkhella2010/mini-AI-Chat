@@ -6,10 +6,9 @@ from ..models import User,Item,Chat
 from django.db.models import Q
 from ..auth.jwt import decode_jwt
 from .open_ai import generate_answer
-from ..auth.decorators import jwt_required
 
 
-@jwt_required
+
 @csrf_exempt
 
 def add_item_to_chat(req,user_id,chat_id):

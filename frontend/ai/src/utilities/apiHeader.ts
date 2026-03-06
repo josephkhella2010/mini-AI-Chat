@@ -1,11 +1,12 @@
 import axios from "axios";
 
-export const getToken=() => sessionStorage.getItem("token") || "";
-
+export const getToken = () => {
+  return sessionStorage.getItem("token") || localStorage.getItem("token") || "";
+};
 export const logoutUser = () => {
   sessionStorage.removeItem("token");
   localStorage.removeItem("user");
-  window.localStorage.href = "/login";
+  window.location.href = "/login";
 };
 
 // axios instance
@@ -27,22 +28,22 @@ apiUrl.interceptors.response.use(
   },
 );
 
-export const fetchApi=async<T>(
-    endpoint:string,
-    method:"GET"|"POST"|"PUT"|"DELETE",
-    data?:any,
-    useJwt:boolean=true
-):Promise<T>=>{
-    const token=getToken();
-    const headers={
-            "Content-Type": "application/json",
-            ...(useJwt&& token?{"Authorization": `Bearer ${token}`}:{})
-    }
-    const response = await apiUrl.request({
-    url:endpoint,
+export const fetchApi = async <T>(
+  endpoint: string,
+  method: "GET" | "POST" | "PUT" | "DELETE",
+  data?: any,
+  useJwt: boolean = true,
+): Promise<T> => {
+  const token = getToken();
+  const headers = {
+    "Content-Type": "application/json",
+    ...(useJwt && token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+  const response = await apiUrl.request({
+    url: endpoint,
     method,
     data,
-    headers
-})
-return response.data
-}
+    headers,
+  });
+  return response.data;
+};
