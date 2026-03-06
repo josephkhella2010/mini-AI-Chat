@@ -13,7 +13,6 @@ interface initialStateType {
   items: ChatType[];
   singleUser: {
     user: UserType | null;
-    token: string | null;
   };
   chatId: string | null;
 }
@@ -22,7 +21,6 @@ const initialState: initialStateType = {
   users: [],
   singleUser: {
     user: userStoraged,
-    token: tokenStoraged,
   },
   items: [],
   chatId: chatIdStorage ? chatIdStorage : null,
@@ -42,13 +40,11 @@ const MainUserSlice = createSlice({
       action: PayloadAction<{ user: UserType; token: string }>,
     ) => {
       state.singleUser.user = action.payload.user;
-      state.singleUser.token = action.payload.token;
       localStorage.setItem("user", JSON.stringify(action.payload.user));
       sessionStorage.setItem("token", action.payload.token);
     },
     setLogoutUser: (state) => {
       state.singleUser.user = null;
-      state.singleUser.token = null;
       localStorage.removeItem("user");
       localStorage.removeItem("token"); // if you stored token separately
       sessionStorage.removeItem("token");
@@ -60,7 +56,6 @@ const MainUserSlice = createSlice({
       state.users = filteredUser;
       if (state.singleUser?.user?.id === action.payload) {
         state.singleUser.user = null;
-        state.singleUser.token = null;
         localStorage.removeItem("user");
         sessionStorage.removeItem("token");
       }

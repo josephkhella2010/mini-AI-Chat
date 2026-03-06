@@ -23,6 +23,7 @@ export const cssStyle = createUseStyles({
 export default function NavigationMainContainer() {
   const classes = cssStyle();
   const navigate = useNavigate();
+  const token = sessionStorage.getItem("token");
   const { singleUser } = useSelector(
     (state: RootState) => state.mainUserInfoData,
   );
@@ -48,7 +49,7 @@ export default function NavigationMainContainer() {
     }
   }
   useEffect(() => {
-    if (singleUser?.token) {
+    if (token) {
       CalculateDateOfBirth();
     }
   }, [singleUser]);
@@ -61,7 +62,7 @@ export default function NavigationMainContainer() {
         <li onClick={() => navigate("/register")}>Register</li>
         <li onClick={() => navigate("/login")}>Login</li>
 
-        {singleUser.token && (
+        {token && (
           <div
             style={{
               borderRadius: "50%",

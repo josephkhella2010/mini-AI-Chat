@@ -57,7 +57,7 @@ def update_user(req,user_id):
             "lastname":data.get("lastname"),
             "email":data.get("email"),
             "username":data.get("username"),
-            "password": hashed_password,     
+            "password": token_user.password,     
              "items": [
         {
             "chatId": chat.id,
