@@ -1,4 +1,4 @@
-from django.shortcuts import render
+""" from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -15,22 +15,23 @@ def add_chat_to_user(req,user_id):
     try:
         auth_header = req.headers.get("Authorization")
 
-        if not auth_header:
-            return JsonResponse({"msg":"Please Login first"},status=401)
-        token =auth_header.split(" ")[1]
-        payload=decode_jwt(token)
+        # 🔐 Authentication
+        auth_header = req.headers.get("Authorization")
+        if not auth_header or not auth_header.startswith("Bearer "):
+            return JsonResponse({"error": "Authorization token required"}, status=401)
+
+        token = auth_header.split(" ")[1]
+        payload = decode_jwt(token)
         if not payload:
-            return JsonResponse({"msg":"Token is not valid"},status=401)
-        token_user_id=payload.get("user_id")
-        token_user=User.objects.filter(id =token_user_id).first()
+            return JsonResponse({"error": "Invalid or expired token"}, status=401)
 
-        if  not token_user:
-            return JsonResponse({"msg":"User is not found"},status=404)
-         # 🔒 Only allow self-delete
-        if token_user.id != int(user_id):
-            return JsonResponse({"error": "Permission denied"}, status=403)
-
+        # assign token user ID first
         token_user_id = payload.get("user_id")
+
+        # 🔒 Authorization check
+        if token_user_id != user_id:
+            return JsonResponse({"error": "You are not allowed to add items for this user"}, status=403)
+
 
         token_user = User.objects.filter(id=token_user_id).first()
 
@@ -71,3 +72,80 @@ def add_chat_to_user(req,user_id):
     except Exception as e:
         return JsonResponse({"error":str(e)},status=500)
 
+ """
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from ..models import User
+from ..models import Chat
+from django.db.models import Q
+from ..auth.jwt import decode_jwt
+
+@csrf_exempt
+def add_chat_to_user(req, user_id):
+
+    if req.method != "POST":
+        return JsonResponse({"error": "methods is not Valid"}, status=500)
+
+    try:
+        auth_header = req.headers.get("Authorization")
+
+        # 🔐 Authentication
+        if not auth_header or not auth_header.startswith("Bearer "):
+            return JsonResponse({"error": "Authorization token required"}, status=401)
+
+        token = auth_header.split(" ")[1]
+        payload = decode_jwt(token)
+
+        if not payload:
+            return JsonResponse({"error": "Invalid or expired token"}, status=401)
+
+        # assign token user ID first
+        token_user_id = payload.get("user_id")
+
+        # 🔒 Authorization check
+        if int(token_user_id) != int(user_id):
+            return JsonResponse({"error": "You are not allowed to add items for this user"}, status=403)
+
+        token_user = User.objects.filter(id=token_user_id).first()
+
+        if not token_user:
+            return JsonResponse({"msg": "User is not found"}, status=404)
+
+        # 🔥 add item
+
+        # ✅ CREATE NEW CHAT (THIS IS THE IMPORTANT PART)
+        new_chat = Chat.objects.create(user=token_user)
+
+        # 🔄 Return updated items
+        user_data = {
+            "id": token_user.id,
+            "username": token_user.username,
+            "email": token_user.email,
+            "firstname": token_user.firstname,
+            "lastname": token_user.lastname,
+            "dateOfBirth": token_user.dateOfBirth,
+            "items": [
+                {
+                    "chatId": chat.id,
+                    "chatItems": []
+                }
+                for chat in token_user.items.all()
+            ]
+        }
+
+        return JsonResponse(
+            {
+                "msg": "chat items is created successfully",
+                "user": user_data,
+                "chat": {
+                    "chatId": new_chat.id,
+                    "chatItems": []
+                }
+            },
+            status=200
+        )
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)

@@ -10,13 +10,22 @@ def delete_user(req,user_id):
     if req.method !="DELETE":
         return JsonResponse({"error":"Method not Allowed"},status=405)
     try:
-        auth_header=req.headers.get("Authorization")
-        if not auth_header:
-            return JsonResponse({"msg":"Please Login first"},status=401)
-        token =auth_header.split(" ")[1]
-        payload=decode_jwt(token)
+        # 🔐 Authentication
+        auth_header = req.headers.get("Authorization")
+        if not auth_header or not auth_header.startswith("Bearer "):
+            return JsonResponse({"error": "Authorization token required"}, status=401)
+
+        token = auth_header.split(" ")[1]
+        payload = decode_jwt(token)
         if not payload:
-            return JsonResponse({"msg":"Token is not valid"},status=401)
+            return JsonResponse({"error": "Invalid or expired token"}, status=401)
+
+        # assign token user ID first
+        token_user_id = payload.get("user_id")
+
+        # 🔒 Authorization check
+        if token_user_id != user_id:
+            return JsonResponse({"error": "You are not allowed to add items for this user"}, status=403)
         token_user_id=payload.get("user_id")
         token_user=User.objects.filter(id =token_user_id).first()
 
