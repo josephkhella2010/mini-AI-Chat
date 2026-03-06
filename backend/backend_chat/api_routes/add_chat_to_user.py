@@ -13,7 +13,8 @@ def add_chat_to_user(req,user_id):
     if req.method !="POST":
         return JsonResponse({"error":"methods is not Valid"},status=500)
     try:
-        auth_header=req.headers.get("Authorization")
+        auth_header = req.headers.get("Authorization")
+
         if not auth_header:
             return JsonResponse({"msg":"Please Login first"},status=401)
         token =auth_header.split(" ")[1]
@@ -28,6 +29,13 @@ def add_chat_to_user(req,user_id):
          # 🔒 Only allow self-delete
         if token_user.id != int(user_id):
             return JsonResponse({"error": "Permission denied"}, status=403)
+
+        token_user_id = payload.get("user_id")
+
+        token_user = User.objects.filter(id=token_user_id).first()
+
+        if not token_user:
+            return JsonResponse({"msg": "User is not found"}, status=404)
         # 🔥 add item
 
         # ✅ CREATE NEW CHAT (THIS IS THE IMPORTANT PART)

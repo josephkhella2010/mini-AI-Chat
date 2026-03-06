@@ -15,15 +15,29 @@ def add_item_to_chat(req,user_id,chat_id):
     if req.method !="POST":
         return JsonResponse({"error":"Method is not Allowed"},status=405)
     try:
-        auth_header=req.headers.get("Authorization")
+        auth_header = req.headers.get("Authorization")
+
         if not auth_header:
             return JsonResponse({"msg":"Please Login first"},status=401)
         token =auth_header.split(" ")[1]
-        payload, error = decode_jwt(token)
+        payload=decode_jwt(token)
+        if not payload:
+            return JsonResponse({"msg":"Token is not valid"},status=401)
+        token_user_id=payload.get("user_id")
+        token_user=User.objects.filter(id =token_user_id).first()
 
-        if error:
-              return JsonResponse({"msg": "Token is not valid"}, status=401)
+        if  not token_user:
+            return JsonResponse({"msg":"User is not found"},status=404)
+         # 🔒 Only allow self-delete
+        if token_user.id != int(user_id):
+            return JsonResponse({"error": "Permission denied"}, status=403)
 
+        token_user_id = payload.get("user_id")
+
+        token_user = User.objects.filter(id=token_user_id).first()
+
+        if not token_user:
+            return JsonResponse({"msg": "User is not found"}, status=404)
         token_user_id = payload.get("user_id")
         token_user=User.objects.filter(id =token_user_id).first()
 
@@ -36,8 +50,7 @@ def add_item_to_chat(req,user_id,chat_id):
 
         data=json.loads(req.body)
 
-        if not isinstance(data, dict):
-           return JsonResponse({"error": "Invalid JSON format"}, status=400)
+  
 
         question = data["question"]
         ai_answer = generate_answer(question)

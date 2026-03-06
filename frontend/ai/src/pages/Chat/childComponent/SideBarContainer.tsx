@@ -2,6 +2,7 @@ import { createUseStyles } from "react-jss";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../../../store/store";
 import { useEffect } from "react";
+import type { ItemsChatType } from "../../../utilities/interfaces";
 
 export const cssStyle = createUseStyles({
   sideBarWapper: {
@@ -34,6 +35,22 @@ export default function SideBarContainer({ userId }: PropsType) {
   const dispatch = useDispatch();
   const { items } = useSelector((state: RootState) => state.mainUserInfoData);
   console.log("items", items);
+  const lastItems = items
+    .map((item) => {
+      return item.chatItems[item.chatItems.length - 1];
+    })
+    .filter(Boolean);
+
+  const sliceQuestionAndAnswer = (lastItems: ItemsChatType[]) => {
+    const result = lastItems?.map((que) => ({
+      question: que?.question.slice(0, 20) + " ...",
+      answer: que?.answer.slice(0, 40) + " ...",
+    }));
+
+    return result;
+  };
+
+  const slicedArr = sliceQuestionAndAnswer(lastItems);
 
   useEffect(() => {
     if (userId) {
@@ -46,105 +63,15 @@ export default function SideBarContainer({ userId }: PropsType) {
       <div className={classes.sideBarMainContainer}>
         <h2>SideBarContainer</h2>
         <div className={classes.historyContainer}>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5> <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5> <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
-          <h5>Items</h5>
+          {slicedArr &&
+            slicedArr.map((item, ind: number) => {
+              return (
+                <div key={ind}>
+                  <h4>{item?.question}</h4>
+                  <p>{item?.answer}</p>
+                </div>
+              );
+            })}
         </div>
       </div>
     </div>

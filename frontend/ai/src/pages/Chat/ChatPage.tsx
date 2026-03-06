@@ -72,6 +72,9 @@ export default function ChatPage() {
     });
   };
   const handleAddItemChat = () => {
+    if (chatInput === "") {
+      return;
+    }
     if (chatId == undefined || chatId === null) {
       dispatch({
         type: "FETCH_ADD_NEW_CHAT",
