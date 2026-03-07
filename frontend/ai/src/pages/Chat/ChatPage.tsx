@@ -108,7 +108,9 @@ export default function ChatPage() {
     }
     setChatInput("");
   };
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     if (e.key === "Enter") {
       handleAddItemChat();
     }
