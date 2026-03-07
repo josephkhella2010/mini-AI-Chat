@@ -35,7 +35,10 @@ export default function SideBarContainer({ userId }: PropsType) {
   const dispatch = useDispatch();
   const { items } = useSelector((state: RootState) => state.mainUserInfoData);
   console.log("items", items);
-  const lastItems = items
+  const AllitemExceptLast = items.filter(
+    (_item, ind) => ind < items.length - 1,
+  );
+  const lastItems =  AllitemExceptLast
     .map((item) => {
       return item.chatItems[item.chatItems.length - 1];
     })

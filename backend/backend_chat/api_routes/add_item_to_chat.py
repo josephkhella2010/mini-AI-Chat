@@ -165,8 +165,6 @@ def add_item_to_chat(req,user_id,chat_id):
         ai_answer = generate_answer(question)
 
         chat = Chat.objects.filter(id=chat_id, user=token_user).first()
-        if not chat:
-           return JsonResponse({"error": "Chat not found"}, status=404)
 
         print("RAW BODY:", req.body)
         data = json.loads(req.body if req.body else "{}")

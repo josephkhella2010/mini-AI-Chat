@@ -43,7 +43,7 @@ export default function SettingUserPage() {
     setSaveInputVal({
       username: userToEdit.username ?? "",
       email: userToEdit.email ?? "",
-      password: userToEdit.password.slice(0, 4) ?? "",
+      password: "",
       firstname: userToEdit.firstname ?? "",
       lastname: userToEdit.lastname ?? "",
       dateOfBirth: userToEdit.dateOfBirth ?? "",
@@ -65,6 +65,10 @@ export default function SettingUserPage() {
       email: saveInputVal.email.toLowerCase(),
       firstname: saveInputVal.firstname.toLowerCase(),
       lastname: saveInputVal.lastname.toLowerCase(),
+      password:
+        saveInputVal.password === filteredUser?.password
+          ? filteredUser.password
+          : saveInputVal.password,
     };
 
     dispatch({

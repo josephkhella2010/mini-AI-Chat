@@ -4,6 +4,7 @@ import SideBarContainer from "./childComponent/SideBarContainer";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../../store/store";
+import { toast } from "react-toastify";
 
 export const cssStyle = createUseStyles({
   chatPageMainContainer: {
@@ -73,9 +74,10 @@ export default function ChatPage() {
   };
   const handleAddItemChat = () => {
     if (chatInput === "") {
+      toast.error("Please Write Something to answer to u");
       return;
     }
-    if (chatId == undefined || chatId === null) {
+    if (!chatId) {
       dispatch({
         type: "FETCH_ADD_NEW_CHAT",
         payload: {
@@ -104,6 +106,12 @@ export default function ChatPage() {
         },
       });
     }
+    setChatInput("");
+  };
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleAddItemChat();
+    }
   };
 
   /*  */
@@ -117,6 +125,7 @@ export default function ChatPage() {
           chatItems={chatItems || []}
           chatInput={chatInput}
           setChatInput={setChatInput}
+          handleKeyDown={handleKeyDown}
         />
       </div>
     </div>
