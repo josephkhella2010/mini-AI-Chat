@@ -40,10 +40,10 @@ export default function ChatPage() {
     return;
   }
 
-  const findChat = usered.items?.find(
-    (it) => Number(it.chatId) === Number(chatId),
+  const findChat = usered.items?.filter(
+    (_, ind) => ind === usered.items.length - 1,
   );
-  const chatItems = findChat?.chatItems;
+  const chatItems = findChat?.[0]?.chatItems;
 
   /*  console.log("user", user);
   console.log(" findChat", findChat); */
@@ -84,7 +84,7 @@ export default function ChatPage() {
       type: "FETCH_ADD_NEW_ITEM_CHAT",
       payload: {
         userId: userId,
-        chatId: chatId ? Number(chatId) : 0, 
+        chatId: chatId ? Number(chatId) : 0,
         data: {
           question: chatInput,
         },
