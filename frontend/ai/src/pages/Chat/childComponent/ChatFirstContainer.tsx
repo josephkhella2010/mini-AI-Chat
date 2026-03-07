@@ -37,9 +37,6 @@ interface PropsType {
   chatItems: ItemsChatType[];
   chatInput: string;
   setChatInput: (chatInput: string) => void;
-  handleKeyDown: (
-    e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => void;
 }
 export default function ChatFirstContainer({
   handleAddItemChat,
@@ -47,7 +44,6 @@ export default function ChatFirstContainer({
   chatItems,
   chatInput,
   setChatInput,
-  handleKeyDown,
 }: PropsType) {
   const classes = cssStyle();
 
@@ -79,7 +75,7 @@ export default function ChatFirstContainer({
             placeholder="Hello and Welcom"
             value={chatInput}
             onChange={(e) => setChatInput(e.target.value)}
-            onKeyDown={handleKeyDown}
+            onKeyDown={(e) => e.key === "Enter" && handleAddItemChat()}
           />
           <button onClick={handleAddItemChat}> send</button>
         </div>

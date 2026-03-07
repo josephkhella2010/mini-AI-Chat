@@ -108,14 +108,12 @@ export default function ChatPage() {
     }
     setChatInput("");
   };
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  /*   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleAddItemChat();
     }
   };
-
+ */
   /*  */
   return (
     <div className={classes.chatPageMainContainer}>
@@ -127,7 +125,6 @@ export default function ChatPage() {
           chatItems={chatItems || []}
           chatInput={chatInput}
           setChatInput={setChatInput}
-          handleKeyDown={handleKeyDown}
         />
       </div>
     </div>

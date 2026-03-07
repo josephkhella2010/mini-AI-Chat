@@ -110,7 +110,7 @@ def add_item_to_chat(req,user_id,chat_id):
 
     except Exception as e:
         return JsonResponse({"error":str(e)},status=500)
- """
+
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -165,12 +165,11 @@ def add_item_to_chat(req,user_id,chat_id):
         ai_answer = generate_answer(question)
 
         chat = Chat.objects.filter(id=chat_id, user=token_user).first()
+        # if chat does not exist → create one
+        if not chat:
+            chat = Chat.objects.create(user=token_user)
 
-        print("RAW BODY:", req.body)
         data = json.loads(req.body if req.body else "{}")
-        print("DATA:", data)
-        print("TYPE:", type(data))
-
         createdItem = Item.objects.create(
                chat=chat,  # 🔥 VERY IMPORTANT
                question=question,
@@ -224,4 +223,141 @@ def add_item_to_chat(req,user_id,chat_id):
         },status=200)
 
     except Exception as e:
-        return JsonResponse({"error":str(e)},status=500)
+        return JsonResponse({"error":str(e)},status=500) """
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from ..models import User, Item, Chat
+from ..auth.jwt import decode_jwt
+from .open_ai import generate_answer
+
+
+@csrf_exempt
+def add_item_to_chat(req, user_id, chat_id):
+
+    if req.method != "POST":
+        return JsonResponse({"error": "Method not allowed"}, status=405)
+
+    try:
+
+        # -------------------------
+        # Authentication
+        # -------------------------
+        auth_header = req.headers.get("Authorization")
+
+        if not auth_header or not auth_header.startswith("Bearer "):
+            return JsonResponse({"error": "Authorization token required"}, status=401)
+
+        token = auth_header.split(" ")[1]
+        payload = decode_jwt(token)
+
+        if not payload:
+            return JsonResponse({"error": "Invalid or expired token"}, status=401)
+
+        token_user_id = payload.get("user_id")
+
+        # -------------------------
+        # Authorization
+        # -------------------------
+        if int(token_user_id) != int(user_id):
+            return JsonResponse({"error": "Permission denied"}, status=403)
+
+        token_user = User.objects.filter(id=token_user_id).first()
+
+        if not token_user:
+            return JsonResponse({"error": "User not found"}, status=404)
+
+        # -------------------------
+        # Request body
+        # -------------------------
+        data = json.loads(req.body if req.body else "{}")
+
+        question = data.get("question")
+
+        if not question:
+            return JsonResponse({"error": "Question is required"}, status=400)
+
+        # -------------------------
+        # Generate AI answer
+        # -------------------------
+        ai_answer = generate_answer(question)
+
+        # -------------------------
+        # Find or Create Chat
+        # -------------------------
+        chat = None
+
+        if int(chat_id) != 0:
+            chat = Chat.objects.filter(id=chat_id, user=token_user).first()
+
+        # create chat if not found
+        if not chat:
+            chat = Chat.objects.create(user=token_user)
+
+        # -------------------------
+        # Create Item
+        # -------------------------
+        created_item = Item.objects.create(
+            chat=chat,
+            question=question,
+            answer=ai_answer
+        )
+
+        # -------------------------
+        # Updated Chat
+        # -------------------------
+        updated_chat = {
+            "chatId": chat.id,
+            "chatItems": [
+                {
+                    "id": item.id,
+                    "question": item.question,
+                    "answer": item.answer
+                }
+                for item in chat.chatItems.all()
+            ]
+        }
+
+        # -------------------------
+        # User Data (password kept)
+        # -------------------------
+        user_data = {
+            "id": token_user.id,
+            "firstname": token_user.firstname,
+            "lastname": token_user.lastname,
+            "email": token_user.email,
+            "username": token_user.username,
+            "password": token_user.password,  # kept as requested
+            "items": [
+                {
+                    "chatId": c.id,
+                    "chatItems": [
+                        {
+                            "id": item.id,
+                            "question": item.question,
+                            "answer": item.answer
+                        }
+                        for item in c.chatItems.all()
+                    ]
+                }
+                for c in token_user.items.all()
+            ]
+        }
+
+        # -------------------------
+        # Response
+        # -------------------------
+        return JsonResponse({
+            "msg": "successfully added item",
+            "user": user_data,
+            "chat": updated_chat,
+            "item": {
+                "id": created_item.id,
+                "question": created_item.question,
+                "answer": created_item.answer
+            }
+        }, status=200)
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
