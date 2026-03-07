@@ -101,24 +101,35 @@ const MainUserSlice = createSlice({
         data: ItemsChatType;
       }>,
     ) => {
-      const chatIndex = state.items.findIndex(
-        (c) => c.chatId === action.payload.chatId,
-      );
+      const { chatId, data } = action.payload;
 
-      if (chatIndex === -1) return;
-      state.items[chatIndex].chatItems.push(action.payload.data);
+      // find chat
+      const chatIndex = state.items.findIndex((c) => c.chatId === chatId);
+
+      // if chat does not exist -> create it
+      if (chatIndex === -1) {
+        state.items.push({
+          chatId: chatId,
+          chatItems: [data],
+        });
+      } else {
+        state.items[chatIndex].chatItems.push(data);
+      }
 
       if (!state.singleUser.user) return;
 
-      // update single user
+      // update singleUser
       const userChatIndex = state.singleUser.user.items.findIndex(
-        (c) => c.chatId === action.payload.chatId,
+        (c) => c.chatId === chatId,
       );
 
-      if (userChatIndex !== -1) {
-        state.singleUser.user.items[userChatIndex].chatItems.push(
-          action.payload.data,
-        );
+      if (userChatIndex === -1) {
+        state.singleUser.user.items.push({
+          chatId: chatId,
+          chatItems: [data],
+        });
+      } else {
+        state.singleUser.user.items[userChatIndex].chatItems.push(data);
       }
 
       localStorage.setItem("user", JSON.stringify(state.singleUser.user));

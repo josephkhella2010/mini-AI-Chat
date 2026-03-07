@@ -75,7 +75,12 @@ export default function ChatFirstContainer({
             placeholder="Hello and Welcom"
             value={chatInput}
             onChange={(e) => setChatInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleAddItemChat()}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleAddItemChat();
+              }
+            }}
           />
           <button onClick={handleAddItemChat}> send</button>
         </div>

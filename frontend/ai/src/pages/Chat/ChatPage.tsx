@@ -22,6 +22,7 @@ export default function ChatPage() {
   const classes = cssStyle();
   const dispatch = useDispatch();
   /*  */
+
   const [chatInput, setChatInput] = useState<string>("");
   const chatId = localStorage.getItem("chatId") || null;
   const { users, singleUser } = useSelector(
@@ -72,48 +73,26 @@ export default function ChatPage() {
       },
     });
   };
+
   const handleAddItemChat = () => {
-    if (chatInput === "") {
-      toast.error("Please Write Something to answer to u");
+    if (!chatInput) {
+      toast.error("Please Write Something");
       return;
     }
-    if (!chatId) {
-      dispatch({
-        type: "FETCH_ADD_NEW_CHAT",
-        payload: {
-          userId: Number(userId),
+
+    dispatch({
+      type: "FETCH_ADD_NEW_ITEM_CHAT",
+      payload: {
+        userId: userId,
+        chatId: chatId ? Number(chatId) : 0, 
+        data: {
+          question: chatInput,
         },
-      });
-      dispatch({
-        type: "FETCH_ADD_NEW_ITEM_CHAT",
-        payload: {
-          userId: userId,
-          chatId: Number(chatId),
-          data: {
-            question: chatInput,
-          },
-        },
-      });
-    } else {
-      dispatch({
-        type: "FETCH_ADD_NEW_ITEM_CHAT",
-        payload: {
-          userId: userId,
-          chatId: Number(chatId),
-          data: {
-            question: chatInput,
-          },
-        },
-      });
-    }
+      },
+    });
+
     setChatInput("");
   };
-  /*   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleAddItemChat();
-    }
-  };
- */
   /*  */
   return (
     <div className={classes.chatPageMainContainer}>
