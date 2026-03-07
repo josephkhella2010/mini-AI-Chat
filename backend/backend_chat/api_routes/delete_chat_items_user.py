@@ -10,7 +10,7 @@ from ..auth.jwt import decode_jwt
 @csrf_exempt
 def delete_chat_items_user(req,user_id,chat_id):
     if req.method !="DELETE":
-        JsonResponse({"error":"Method is not valid"},status=405)
+        return JsonResponse({"error":"Method is not valid"},status=405)
 
 
     try:
@@ -64,9 +64,10 @@ def delete_chat_items_user(req,user_id,chat_id):
             "lastname": token_user.lastname,
             "email": token_user.email,
             "username": token_user.username,
+            "password":token_user.password,
             "items": user_items
 
         }
-        JsonResponse({"msg":"successfully deleted","user":updated_user,"items":user_items},status=200)
+        return JsonResponse({"msg":"successfully deleted","user":updated_user,"items":user_items},status=200)
     except Exception as e:
-        JsonResponse({"error":str(e)},status=500)
+        return JsonResponse({"error":str(e)},status=500)
