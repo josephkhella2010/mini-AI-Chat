@@ -54,8 +54,9 @@ def add_item_to_chat(req,user_id,chat_id):
 
         chat = Chat.objects.filter(id=chat_id, user=token_user).first()
         # if chat does not exist → create one
+    # ✅ If chat does not exist → create one
         if not chat:
-             return JsonResponse({"error":"please add new "},status=500) 
+               chat = Chat.objects.create(user=token_user)
 
         data = json.loads(req.body if req.body else "{}")
         createdItem = Item.objects.create(
