@@ -134,7 +134,7 @@ const MainUserSlice = createSlice({
 
       localStorage.setItem("user", JSON.stringify(state.singleUser.user));
     },
-    setDeleteChatItem: (
+    /*    setDeleteChatItem: (
       state,
       action: PayloadAction<{ userId: number; chatId: number }>,
     ) => {
@@ -155,6 +155,25 @@ const MainUserSlice = createSlice({
       if (userIndex !== -1) {
         state.users[userIndex].items = filteredItems;
       }
+    }, */
+    setDeleteChatItem: (
+      state,
+      action: PayloadAction<{ userId: number; chatId: number }>,
+    ) => {
+      const findUserIndex = state.users.findIndex((user) => {
+        return Number(user.id) === Number(action.payload.userId);
+      });
+
+      if (findUserIndex === -1) return;
+      if (!state.singleUser.user) return;
+
+      const filteredItems = state.singleUser.user.items.filter((it) => {
+        return Number(it.chatId) !== Number(action.payload.chatId);
+      });
+      state.users[findUserIndex].items = filteredItems;
+      state.singleUser.user.items = filteredItems;
+
+      localStorage.setItem("user", JSON.stringify(state.singleUser.user));
     },
   },
 });
