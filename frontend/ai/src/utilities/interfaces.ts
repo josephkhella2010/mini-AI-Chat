@@ -1,4 +1,5 @@
 export interface ItemsChatType {
+  chatId?: number | null;
   id?: number;
   question: string;
   answer: string;

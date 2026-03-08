@@ -14,64 +14,78 @@ export const cssStyle = createUseStyles({
   sideBarMainContainer: {
     backgroundColor: "green",
     height: "calc(100dvh - 50px)",
-
     position: "sticky",
     top: 0,
     display: "flex",
     flexDirection: "column",
   },
   historyContainer: {
-    flex: 1, // take remaining height
-    overflowY: "auto", // vertical scroll only
+    flex: 1,
+    overflowY: "auto",
     padding: "30px",
   },
 });
 
 interface PropsType {
   userId: any;
+  handleDelete: any;
 }
-export default function SideBarContainer({ userId }: PropsType) {
+
+export default function SideBarContainer({ userId, handleDelete }: PropsType) {
   const classes = cssStyle();
   const dispatch = useDispatch();
-  const { items } = useSelector((state: RootState) => state.mainUserInfoData);
+
+  const items = useSelector(
+    (state: RootState) => state.mainUserInfoData.singleUser.user?.items || [],
+  );
+
   console.log("items", items);
+
+  useEffect(() => {
+    if (userId) {
+      dispatch({ type: "FETCH_ALL_CHATS_USER", payload: { userId } });
+    }
+  }, [userId, dispatch]);
+
   const AllitemExceptLast = items.filter(
     (_item, ind) => ind < items.length - 1,
   );
-  const lastItems =  AllitemExceptLast
-    .map((item) => {
-      return item.chatItems[item.chatItems.length - 1];
-    })
-    .filter(Boolean);
+
+  const chatItemsWithChatId = AllitemExceptLast.filter(
+    (it) => it.chatItems && it.chatItems.length > 0,
+  ).map((it) => ({
+    chatId: it.chatId,
+    ...it.chatItems[it.chatItems.length - 1],
+  }));
 
   const sliceQuestionAndAnswer = (lastItems: ItemsChatType[]) => {
     const result = lastItems?.map((que) => ({
-      question: que?.question.slice(0, 20) + " ...",
-      answer: que?.answer.slice(0, 40) + " ...",
+      chatId: que?.chatId,
+      question: que?.question ? que.question.slice(0, 20) + " ..." : "",
+      answer: que?.answer ? que.answer.slice(0, 40) + " ..." : "",
     }));
 
     return result;
   };
 
-  const slicedArr = sliceQuestionAndAnswer(lastItems);
-
-  useEffect(() => {
-    if (userId) {
-      dispatch({ type: "FETCH_ALL_CHATS_USER", payload: { userId: userId } });
-    }
-  }, [userId]);
+  const slicedArr = sliceQuestionAndAnswer(chatItemsWithChatId);
 
   return (
     <div className={classes.sideBarWapper}>
       <div className={classes.sideBarMainContainer}>
         <h2>SideBarContainer</h2>
+
         <div className={classes.historyContainer}>
           {slicedArr &&
-            slicedArr.map((item, ind: number) => {
+            slicedArr.map((item, _ind: number) => {
               return (
-                <div key={ind}>
+                <div key={item.chatId}>
                   <h4>{item?.question}</h4>
                   <p>{item?.answer}</p>
+
+                  <button onClick={() => handleDelete(item?.chatId)}>
+                    delete
+                  </button>
                 </div>
               );
             })}

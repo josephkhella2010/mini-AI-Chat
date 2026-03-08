@@ -7,6 +7,7 @@ import { watchFetchUpdateUser } from "./fetchUpdateUser";
 import WatchAddNewChat from "./fetchAddNewChat";
 import watchGetAllChatUser from "./fetchAllChatUser";
 import wathchAddNewItemChat from "./fetchAddNewItemChar";
+import watchDeleteChatUser from "./fetchDeleteChatArray";
 
 export default function* rootSaga() {
   yield all([
@@ -18,5 +19,6 @@ export default function* rootSaga() {
     WatchAddNewChat(),
     watchGetAllChatUser(),
     wathchAddNewItemChat(),
+    watchDeleteChatUser(),
   ]);
 }

@@ -93,11 +93,21 @@ export default function ChatPage() {
 
     setChatInput("");
   };
+  const handleDelete = (chatIdItem: number) => {
+    console.log("chatIdItem", chatIdItem);
+    dispatch({
+      type: "FETCH_DELETE_CHAT_USER",
+      payload: {
+        userId: userId,
+        chatId: chatIdItem,
+      },
+    });
+  };
   /*  */
   return (
     <div className={classes.chatPageMainContainer}>
       <div className={classes.chatPageContainer}>
-        <SideBarContainer userId={userId} />
+        <SideBarContainer userId={userId} handleDelete={handleDelete} />
         <ChatFirstContainer
           handleAddItemChat={handleAddItemChat}
           handleAddChat={handleAddChat}
