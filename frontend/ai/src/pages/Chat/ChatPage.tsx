@@ -22,7 +22,9 @@ export default function ChatPage() {
   const classes = cssStyle();
   const dispatch = useDispatch();
   /*  */
-
+  const items = useSelector(
+    (state: RootState) => state.mainUserInfoData.singleUser.user?.items || [],
+  );
   const [chatInput, setChatInput] = useState<string>("");
   const chatId = localStorage.getItem("chatId") || null;
   const { users, singleUser } = useSelector(
@@ -66,6 +68,12 @@ export default function ChatPage() {
   console.log(userId);
 
   const handleAddChat = () => {
+    const lastChat = items[items.length - 1];
+
+    if (lastChat && lastChat.chatItems.length === 0) {
+      toast.error("please write something in to search");
+      return;
+    }
     dispatch({
       type: "FETCH_ADD_NEW_CHAT",
       payload: {
@@ -94,7 +102,7 @@ export default function ChatPage() {
     setChatInput("");
   };
   const handleDelete = (chatIdItem: number) => {
-    console.log("chatIdItem", chatIdItem);
+      if (!chatIdItem) return;
     dispatch({
       type: "FETCH_DELETE_CHAT_USER",
       payload: {
@@ -107,7 +115,11 @@ export default function ChatPage() {
   return (
     <div className={classes.chatPageMainContainer}>
       <div className={classes.chatPageContainer}>
-        <SideBarContainer userId={userId} handleDelete={handleDelete} />
+        <SideBarContainer 
+        
+        userId={userId} handleDelete={handleDelete} 
+         items={ items}
+        />
         <ChatFirstContainer
           handleAddItemChat={handleAddItemChat}
           handleAddChat={handleAddChat}

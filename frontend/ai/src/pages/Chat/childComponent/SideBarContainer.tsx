@@ -1,8 +1,7 @@
 import { createUseStyles } from "react-jss";
-import { useDispatch, useSelector } from "react-redux";
-import type { RootState } from "../../../store/store";
+import { useDispatch } from "react-redux";
 import { useEffect } from "react";
-import type { ItemsChatType } from "../../../utilities/interfaces";
+import type { ChatType, ItemsChatType } from "../../../utilities/interfaces";
 
 export const cssStyle = createUseStyles({
   sideBarWapper: {
@@ -27,17 +26,18 @@ export const cssStyle = createUseStyles({
 });
 
 interface PropsType {
-  userId: any;
-  handleDelete: any;
+  userId: number | null | undefined;
+  handleDelete: (chatIdItem: number) => void;
+  items: ChatType[];
 }
 
-export default function SideBarContainer({ userId, handleDelete }: PropsType) {
+export default function SideBarContainer({
+  userId,
+  handleDelete,
+  items,
+}: PropsType) {
   const classes = cssStyle();
   const dispatch = useDispatch();
-
-  const items = useSelector(
-    (state: RootState) => state.mainUserInfoData.singleUser.user?.items || [],
-  );
 
   console.log("items", items);
 
@@ -83,7 +83,9 @@ export default function SideBarContainer({ userId, handleDelete }: PropsType) {
                   <h4>{item?.question}</h4>
                   <p>{item?.answer}</p>
 
-                  <button onClick={() => handleDelete(item?.chatId)}>
+                  <button
+                    onClick={() => item?.chatId && handleDelete(item.chatId)}
+                  >
                     delete
                   </button>
                 </div>
