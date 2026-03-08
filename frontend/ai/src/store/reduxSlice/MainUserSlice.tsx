@@ -134,28 +134,6 @@ const MainUserSlice = createSlice({
 
       localStorage.setItem("user", JSON.stringify(state.singleUser.user));
     },
-    /*    setDeleteChatItem: (
-      state,
-      action: PayloadAction<{ userId: number; chatId: number }>,
-    ) => {
-      if (!state.singleUser.user) return;
-
-      const filteredItems = state.singleUser.user.items.filter(
-        (item) => item.chatId !== action.payload.chatId,
-      );
-
-      state.singleUser.user.items = filteredItems;
-
-      localStorage.setItem("user", JSON.stringify(state.singleUser.user));
-
-      const userIndex = state.users.findIndex(
-        (u) => u.id === action.payload.userId,
-      );
-
-      if (userIndex !== -1) {
-        state.users[userIndex].items = filteredItems;
-      }
-    }, */
     setDeleteChatItem: (
       state,
       action: PayloadAction<{ userId: number; chatId: number }>,
